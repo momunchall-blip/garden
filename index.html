@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Han's Garden & Ria Cafe 🌸</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Noto+Sans+KR:wght@300;400;500&display=swap');
+:root {
+  --cream: #fdf6f0;
+  --blush: #f9e8e0;
+  --sakura: #f2c4ce;
+  --rose: #e8a0b0;
+  --deep-rose: #c4687a;
+  --bark: #5c3d3d;
+  --dark: #2d1a1a;
+  --white: #ffffff;
+  --shadow: rgba(90,40,40,0.10);
+  --header-h: 60px;
+  --mobile-nav-h: 60px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans KR',Arial,sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;overflow-x:hidden;padding-bottom:var(--mobile-nav-h)}
+
+/* SAKURA */
+.sakura-bg{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.petal{position:absolute;background:radial-gradient(ellipse at 30% 30%,#fff 10%,var(--sakura) 60%,var(--rose) 100%);border-radius:150% 0 150% 0;opacity:0;animation:fall linear infinite}
+@keyframes fall{0%{transform:translateY(-20px) rotate(0deg);opacity:.8}100%{transform:translateY(100vh) rotate(720deg) translateX(40px);opacity:0}}
+
+/* HEADER */
+header{position:sticky;top:0;z-index:200;background:rgba(253,246,240,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--sakura);height:var(--header-h);display:flex;align-items:center;padding:0 1rem;gap:.8rem;box-shadow:0 2px 16px var(--shadow)}
+.logo{font-family:'Cormorant Garamond','Georgia',serif;font-size:1.2rem;font-weight:600;color:var(--bark);cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;flex-shrink:0}
+.logo-img{height:38px;width:auto;object-fit:contain}
+.logo-text{font-size:1.1rem}
+.hero-logo-wrap{margin-bottom:1rem}
+.hero-logo{height:80px;width:auto;object-fit:contain;filter:drop-shadow(0 2px 12px rgba(196,104,122,.3))}
+#mainNav{display:flex;gap:.1rem;flex:1;justify-content:center;overflow-x:auto;scrollbar-width:none}
+#mainNav::-webkit-scrollbar{display:none}
+.nav-btn{background:none;border:none;padding:.35rem .7rem;font-family:'Noto Sans KR',Arial,sans-serif;font-size:.78rem;font-weight:500;color:var(--bark);cursor:pointer;border-radius:20px;transition:all .2s;white-space:nowrap}
+.nav-btn:hover,.nav-btn.active{background:var(--sakura)}
+.header-right{display:flex;align-items:center;gap:.4rem;flex-shrink:0}
+.lang-btn{background:none;border:1.5px solid var(--sakura);border-radius:20px;padding:.25rem .6rem;font-size:.72rem;color:var(--bark);cursor:pointer;transition:all .2s;font-family:'Noto Sans KR',Arial,sans-serif}
+.lang-btn:hover{background:var(--sakura)}
+.social-btn{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:.9rem;transition:transform .2s}
+.social-btn.insta{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)}
+.social-btn.wa{background:#25D366}
+.social-btn:hover{transform:scale(1.1)}
+.cart-btn{background:var(--deep-rose);color:#fff;border:none;border-radius:24px;padding:.35rem .8rem;font-size:.78rem;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Noto Sans KR',Arial,sans-serif;transition:all .2s;white-space:nowrap}
+.cart-btn:hover{background:var(--bark)}
+.cart-count{background:#fff;color:var(--deep-rose);border-radius:50%;width:18px;height:18px;font-size:.68rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+
+/* MOBILE NAV */
+.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;height:var(--mobile-nav-h);background:rgba(253,246,240,.97);backdrop-filter:blur(16px);border-top:1px solid var(--sakura);box-shadow:0 -2px 16px var(--shadow);justify-content:space-around;align-items:center}
+.mobile-nav-btn{background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;padding:.3rem .5rem;font-size:1.2rem;color:var(--bark);font-family:'Noto Sans KR',Arial,sans-serif;min-width:50px;border-radius:12px;transition:background .15s;position:relative}
+.mobile-nav-btn span{font-size:.6rem;line-height:1}
+.mobile-nav-btn.active,.mobile-nav-btn:hover{background:var(--blush)}
+.m-badge{position:absolute;top:-2px;right:2px;background:var(--deep-rose);color:#fff;border-radius:50%;width:16px;height:16px;font-size:.6rem;font-weight:700;display:none;align-items:center;justify-content:center}
+.m-badge.show{display:flex}
+
+/* PAGES */
+.page{display:none}
+.page.active{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* HERO */
+.hero{position:relative;min-height:420px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#fdf0f4,#fce8f0,#f5d5e4);overflow:hidden}
+.hero-deco{position:absolute;font-size:10rem;opacity:.06;font-family:'Noto Serif KR','Georgia',serif;color:var(--deep-rose);user-select:none;pointer-events:none}
+.hero-deco.left{left:-1.5rem;top:-1.5rem}
+.hero-deco.right{right:-1.5rem;bottom:-1.5rem}
+.hero-content{text-align:center;position:relative;z-index:2;padding:2.5rem 1.5rem}
+.hero-badge{display:inline-block;background:var(--sakura);color:var(--bark);border-radius:20px;padding:.25rem .9rem;font-size:.75rem;letter-spacing:.08em;margin-bottom:.8rem;font-weight:500}
+.hero h1{font-family:'Cormorant Garamond','Georgia',serif;font-size:clamp(2rem,8vw,3.6rem);font-weight:300;color:var(--bark);line-height:1.15;margin-bottom:.8rem}
+.hero h1 em{font-style:italic;color:var(--deep-rose)}
+.hero p{font-size:.9rem;color:#7a5a5a;max-width:380px;margin:0 auto 1.8rem;line-height:1.6}
+.hero-btns{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap}
+
+/* BUTTONS */
+.btn-primary{background:var(--deep-rose);color:#fff;border:none;border-radius:30px;padding:.7rem 1.6rem;font-size:.88rem;cursor:pointer;font-family:'Noto Sans KR',Arial,sans-serif;transition:all .2s;box-shadow:0 4px 16px rgba(196,104,122,.35);display:inline-flex;align-items:center;gap:6px}
+.btn-primary:hover{background:var(--bark);transform:translateY(-1px)}
+.btn-outline{background:none;color:var(--bark);border:1.5px solid var(--rose);border-radius:30px;padding:.7rem 1.6rem;font-size:.88rem;cursor:pointer;font-family:'Noto Sans KR',Arial,sans-serif;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-outline:hover{background:var(--blush)}
+
+/* FEATURES */
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;padding:2rem 1.2rem;max-width:900px;margin:0 auto}
+.feature-card{background:#fff;border-radius:18px;padding:1.3rem;text-align:center;border:1px solid var(--blush);box-shadow:0 2px 12px var(--shadow);transition:transform .2s}
+.feature-card:hover{transform:translateY(-3px)}
+.feature-card .icon{font-size:1.8rem;margin-bottom:.5rem}
+.feature-card h3{font-size:.85rem;font-weight:600;color:var(--bark);margin-bottom:.3rem}
+.feature-card p{font-size:.75rem;color:#8a6060;line-height:1.4}
+.sakura-divider{text-align:center;padding:.8rem;color:var(--sakura);font-size:1.3rem;letter-spacing:.5rem;opacity:.7}
+.home-social{text-align:center;padding:1rem 1rem 2.5rem;color:#8a6060;font-size:.85rem}
+
+/* PAGE HEADER */
+.page-header{background:linear-gradient(135deg,#fdf0f4,#fce8f0);padding:2.5rem 1.5rem 1.8rem;text-align:center;border-bottom:1px solid var(--blush)}
+.page-header h2{font-family:'Cormorant Garamond','Georgia',serif;font-size:2rem;font-weight:300;color:var(--bark)}
+.page-header p{color:#8a6060;font-size:.85rem;margin-top:.3rem}
+
+/* SEARCH */
+.menu-search-wrap{padding:.9rem 1.2rem .4rem;max-width:500px;margin:0 auto}
+.menu-search{width:100%;padding:.65rem 1rem .65rem 1rem;border:1.5px solid var(--blush);border-radius:30px;font-family:'Noto Sans KR',Arial,sans-serif;font-size:.88rem;color:var(--dark);background:#fff;outline:none;transition:border .2s}
+.menu-search:focus{border-color:var(--rose)}
+.no-results{text-align:center;padding:3rem 1rem;color:#aa8888;font-size:.9rem}
+.no-results.hidden{display:none}
+
+/* CATEGORY TABS */
+.category-tabs{display:flex;gap:.4rem;flex-wrap:nowrap;overflow-x:auto;padding:.8rem 1.2rem;position:sticky;top:var(--header-h);z-index:10;background:var(--cream);border-bottom:1px solid var(--blush);scrollbar-width:none}
+.category-tabs::-webkit-scrollbar{display:none}
+.cat-tab{background:#fff;border:1.5px solid var(--blush);border-radius:24px;padding:.4rem 1rem;font-size:.8rem;cursor:pointer;color:var(--bark);font-family:'Noto Sans KR',Arial,sans-serif;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.cat-tab:hover,.cat-tab.active{background:var(--deep-rose);color:#fff;border-color:var(--deep-rose)}
+
+/* MENU GRID */
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1.2rem;padding:1.5rem 1.2rem;max-width:1100px;margin:0 auto}
+.menu-card{background:#fff;border-radius:18px;border:1px solid var(--blush);overflow:hidden;box-shadow:0 2px 12px var(--shadow);transition:transform .2s,box-shadow .2s}
+.menu-card:hover{transform:translateY(-4px);box-shadow:0 8px 28px rgba(196,104,122,.18)}
+.menu-card-img{width:100%;height:165px;background:linear-gradient(135deg,var(--blush),var(--sakura));display:flex;align-items:center;justify-content:center;font-size:3rem;overflow:hidden}
+.menu-card-img img{width:100%;height:100%;object-fit:cover}
+.menu-card-body{padding:1rem}
+.menu-card-cat{font-size:.68rem;color:var(--deep-rose);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.25rem}
+.menu-card h3{font-size:.95rem;font-weight:600;color:var(--dark);margin-bottom:.25rem}
+.menu-card p{font-size:.78rem;color:#8a6060;line-height:1.4;margin-bottom:.5rem}
+.menu-card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:.5rem}
+.price{font-family:'Cormorant Garamond','Georgia',serif;font-size:1.2rem;font-weight:600;color:var(--bark)}
+.add-btn{background:var(--deep-rose);color:#fff;border:none;border-radius:50%;width:32px;height:32px;font-size:1.2rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.add-btn:hover{background:var(--bark);transform:scale(1.1)}
+.add-btn:active{transform:scale(.95)}
+
+/* BADGES */
+.badges-row{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.4rem}
+.badge{display:inline-flex;align-items:center;border-radius:20px;padding:.18rem .55rem;font-size:.68rem;font-weight:500;line-height:1.2}
+.badge-spice{background:#fff3e0;color:#a05000;border:1px solid #ffd9a0}
+.badge-hit{background:#ffe0e8;color:#b03060;border:1px solid #ffb5c8}
+.badge-new{background:#e0f4e8;color:#1a7a3a;border:1px solid #a5dbb5}
+.badge-vegan{background:#e8f5e8;color:#2d7a2d;border:1px solid #b0d8b0}
+.badge-gf{background:#f0eaff;color:#6030a0;border:1px solid #c8b0f0}
+.badge-default{background:#f0f0f0;color:#555;border:1px solid #ddd}
+
+/* CART */
+.cart-container{max-width:680px;margin:0 auto;padding:1.5rem 1.2rem}
+.cart-empty{text-align:center;padding:4rem 1rem;color:#aa8888}
+.cart-empty .icon{font-size:3.5rem;margin-bottom:.8rem}
+.cart-item{background:#fff;border-radius:14px;border:1px solid var(--blush);padding:.9rem 1rem;display:flex;align-items:center;gap:.8rem;margin-bottom:.7rem;box-shadow:0 1px 6px var(--shadow)}
+.cart-item-emoji{font-size:1.8rem;flex-shrink:0}
+.cart-item-img{width:42px;height:42px;border-radius:8px;object-fit:cover;flex-shrink:0}
+.cart-item-info{flex:1;min-width:0}
+.cart-item-info h4{font-size:.88rem;font-weight:600;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cart-item-info p{font-size:.75rem;color:#aa8080}
+.cart-qty{display:flex;align-items:center;gap:.4rem;flex-shrink:0}
+.qty-btn{background:var(--blush);border:none;width:26px;height:26px;border-radius:50%;font-size:1rem;cursor:pointer;color:var(--bark);display:flex;align-items:center;justify-content:center;transition:background .15s}
+.qty-btn:hover{background:var(--sakura)}
+.qty-btn:active{transform:scale(.9)}
+.qty-num{font-weight:600;min-width:18px;text-align:center;font-size:.88rem}
+.cart-item-price{font-family:'Cormorant Garamond','Georgia',serif;font-size:1rem;font-weight:600;color:var(--bark);flex-shrink:0}
+.remove-btn{background:none;border:none;color:#cca0a0;cursor:pointer;font-size:1rem;padding:.2rem;flex-shrink:0}
+.cart-total{background:linear-gradient(135deg,var(--blush),var(--sakura));border-radius:14px;padding:1rem 1.2rem;margin-top:1.2rem;display:flex;align-items:center;justify-content:space-between}
+.cart-total h3{font-size:.95rem;color:var(--bark)}
+.cart-total .total-price{font-family:'Cormorant Garamond','Georgia',serif;font-size:1.7rem;font-weight:600;color:var(--bark)}
+.show-waiter-btn{width:100%;margin-top:.9rem;background:var(--deep-rose);color:#fff;border:none;border-radius:30px;padding:.9rem;font-size:.95rem;cursor:pointer;font-family:'Noto Sans KR',Arial,sans-serif;transition:all .2s;box-shadow:0 4px 16px rgba(196,104,122,.3)}
+.show-waiter-btn:hover{background:var(--bark)}
+.show-waiter-btn:active{transform:scale(.98)}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(40,15,15,.6);backdrop-filter:blur(4px);z-index:500;display:flex;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.hidden{display:none}
+.modal-box{background:var(--white);border-radius:22px;padding:2rem 1.5rem;max-width:420px;width:100%;text-align:center;position:relative;box-shadow:0 20px 60px rgba(90,30,30,.25);max-height:90vh;overflow-y:auto}
+.modal-box h2{font-family:'Cormorant Garamond','Georgia',serif;font-size:1.6rem;color:var(--bark);margin-bottom:.3rem}
+.modal-box p{color:#8a6060;font-size:.85rem;margin-bottom:1.2rem}
+.modal-cart-list{text-align:left;margin-bottom:1rem}
+.modal-cart-item{display:flex;justify-content:space-between;padding:.45rem 0;border-bottom:1px dashed var(--blush);font-size:.85rem}
+.modal-total{font-family:'Cormorant Garamond','Georgia',serif;font-size:1.4rem;font-weight:600;color:var(--bark);margin:.8rem 0}
+.modal-close{position:absolute;top:.8rem;right:1rem;background:none;border:none;font-size:1.3rem;cursor:pointer;color:#cca0a0}
+
+/* BANQUET */
+.banquet-container{max-width:680px;margin:0 auto;padding:1.5rem 1.2rem}
+.banquet-info-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.8rem;margin-bottom:1.5rem}
+.banquet-info-card{background:#fff;border-radius:16px;padding:1.1rem;text-align:center;border:1px solid var(--blush)}
+.banquet-info-card .icon{font-size:1.6rem;margin-bottom:.4rem}
+.banquet-info-card h4{font-size:.85rem;font-weight:600;color:var(--bark)}
+.banquet-info-card p{font-size:.75rem;color:#8a6060;margin-top:.2rem}
+
+/* FORMS */
+.form-card{background:#fff;border-radius:20px;padding:1.5rem;border:1px solid var(--blush);box-shadow:0 4px 20px var(--shadow)}
+.form-card h3{font-family:'Cormorant Garamond','Georgia',serif;font-size:1.4rem;color:var(--bark);margin-bottom:1.2rem}
+.form-group{margin-bottom:.9rem}
+.form-group label{display:block;font-size:.78rem;color:var(--bark);margin-bottom:.3rem;font-weight:500}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:.65rem .9rem;border:1.5px solid var(--blush);border-radius:10px;font-family:'Noto Sans KR',Arial,sans-serif;font-size:.88rem;color:var(--dark);background:var(--cream);transition:border .2s;outline:none;-webkit-appearance:none;appearance:none}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--rose)}
+.form-group textarea{resize:vertical;min-height:75px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.submit-btn{width:100%;background:var(--deep-rose);color:#fff;border:none;border-radius:30px;padding:.85rem;font-size:.9rem;cursor:pointer;font-family:'Noto Sans KR',Arial,sans-serif;transition:all .2s;margin-top:.3rem;box-shadow:0 4px 16px rgba(196,104,122,.3)}
+.submit-btn:hover{background:var(--bark)}
+.submit-btn:active{transform:scale(.98)}
+.success-msg{display:none;text-align:center;padding:2.5rem 1.5rem;background:linear-gradient(135deg,var(--blush),var(--sakura));border-radius:20px;margin-top:1rem}
+.success-msg .icon{font-size:2.8rem;margin-bottom:.7rem}
+.success-msg h3{color:var(--bark);font-family:'Cormorant Garamond','Georgia',serif;font-size:1.5rem}
+.success-msg p{color:#7a5a5a;font-size:.85rem;margin-top:.3rem}
+
+/* ===== REVIEWS ===== */
+.reviews-container{max-width:680px;margin:0 auto;padding:1.5rem 1.2rem}
+.review-form-card{margin-bottom:2rem}
+
+/* Stars */
+.stars-input{display:flex;gap:.4rem;margin-top:.3rem}
+.star-btn{font-size:2rem;cursor:pointer;color:#ddd;transition:color .15s;line-height:1;user-select:none}
+.star-btn.active,.star-btn.hover{color:#f5c518}
+
+/* Quick tags */
+.quick-tags{margin-bottom:.8rem}
+.quick-tags-label{font-size:.78rem;color:var(--bark);font-weight:500;margin-bottom:.5rem}
+.tags-wrap{display:flex;flex-wrap:wrap;gap:.4rem}
+.quick-tag{background:#fff;border:1.5px solid var(--blush);border-radius:20px;padding:.3rem .8rem;font-size:.78rem;cursor:pointer;color:var(--bark);font-family:'Noto Sans KR',Arial,sans-serif;transition:all .2s}
+.quick-tag:hover,.quick-tag.selected{background:var(--sakura);border-color:var(--rose)}
+.quick-tag.neg{border-color:#ffb5b5}
+.quick-tag.neg:hover,.quick-tag.neg.selected{background:#ffe0e0;border-color:#ffaaaa;color:#c44}
+
+/* Reviews list */
+.reviews-list{display:flex;flex-direction:column;gap:1rem}
+.review-card{background:#fff;border-radius:18px;border:1px solid var(--blush);padding:1.2rem 1.3rem;box-shadow:0 2px 12px var(--shadow)}
+.review-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;flex-wrap:wrap;gap:.4rem}
+.review-author{font-weight:600;font-size:.9rem;color:var(--dark)}
+.review-stars{color:#f5c518;font-size:1rem;letter-spacing:.05rem}
+.review-tags-row{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.5rem}
+.review-tag{background:var(--blush);color:var(--bark);border-radius:12px;padding:.15rem .55rem;font-size:.7rem}
+.review-text{font-size:.85rem;color:#5a3a3a;line-height:1.55}
+.review-date{font-size:.72rem;color:#aaa;margin-top:.4rem}
+.reviews-empty{text-align:center;padding:3rem 1rem;color:#aa8888;font-size:.88rem}
+.reviews-empty .icon{font-size:2.5rem;margin-bottom:.6rem}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem;padding:2rem 1.2rem;max-width:900px;margin:0 auto}
+.about-card{background:#fff;border-radius:18px;padding:1.5rem;text-align:center;border:1px solid var(--blush);box-shadow:0 2px 12px var(--shadow)}
+.about-card .icon{font-size:1.9rem;margin-bottom:.6rem}
+.about-card h3{font-size:.95rem;font-weight:600;color:var(--bark);margin-bottom:.4rem}
+.about-card p{font-size:.8rem;color:#8a6060;line-height:1.6}
+.map-section{padding:.5rem 1.2rem 2rem;max-width:680px;margin:0 auto}
+.map-section h3{font-family:'Cormorant Garamond','Georgia',serif;font-size:1.4rem;color:var(--bark);margin-bottom:1rem;text-align:center}
+.map-placeholder{background:linear-gradient(135deg,var(--blush),#f5e4ed);border-radius:18px;padding:2rem 1.5rem;text-align:center;border:1px solid var(--blush);color:#7a5a5a;font-size:.88rem;line-height:1.8}
+.map-placeholder .icon{font-size:2rem;margin-bottom:.6rem}
+
+/* ADMIN */
+.admin-login{max-width:360px;margin:3rem auto;padding:2rem 1.5rem;background:#fff;border-radius:22px;border:1px solid var(--blush);box-shadow:0 4px 28px var(--shadow);text-align:center}
+.admin-login h2{font-family:'Cormorant Garamond','Georgia',serif;font-size:1.7rem;color:var(--bark);margin-bottom:.3rem}
+.admin-login p{color:#8a6060;font-size:.83rem;margin-bottom:1.5rem}
+.admin-tabs{display:flex;gap:.4rem;margin-bottom:1.5rem;border-bottom:2px solid var(--blush);padding-bottom:.5rem;flex-wrap:wrap}
+.admin-tab-btn{background:none;border:none;padding:.45rem 1rem;font-size:.82rem;color:var(--bark);cursor:pointer;border-radius:8px;font-family:'Noto Sans KR',Arial,sans-serif;transition:background .15s}
+.admin-tab-btn.active,.admin-tab-btn:hover{background:var(--blush)}
+.admin-section{display:none}
+.admin-section.active{display:block}
+.admin-dishes-list{display:flex;flex-direction:column;gap:.7rem;margin-bottom:1.5rem}
+.admin-dish-item{background:#fff;border-radius:14px;border:1px solid var(--blush);padding:.9rem 1rem;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+.dish-info{flex:1;min-width:120px}
+.dish-info h4{font-size:.88rem;font-weight:600}
+.dish-info p{font-size:.75rem;color:#8a6060}
+.dish-price{font-family:'Cormorant Garamond','Georgia',serif;font-size:1.05rem;font-weight:600;color:var(--bark);flex-shrink:0}
+.admin-actions{display:flex;gap:.4rem;flex-shrink:0}
+.edit-btn,.del-btn{border:none;border-radius:8px;padding:.3rem .65rem;font-size:.75rem;cursor:pointer;font-family:'Noto Sans KR',Arial,sans-serif;transition:all .15s}
+.edit-btn{background:var(--blush);color:var(--bark)}
+.edit-btn:hover{background:var(--sakura)}
+.del-btn{background:#ffe0e0;color:#c44}
+.del-btn:hover{background:#ffb5b5}
+.add-dish-form{background:#fff;border-radius:18px;padding:1.3rem;border:1px solid var(--blush);margin-top:.8rem}
+.add-dish-form h3{font-size:.95rem;font-weight:600;color:var(--bark);margin-bottom:1rem}
+.img-upload-area{border:2px dashed var(--sakura);border-radius:10px;padding:1.2rem;text-align:center;cursor:pointer;color:#aa8080;font-size:.82rem;transition:all .2s}
+.img-upload-area:hover{background:var(--blush);border-color:var(--rose)}
+.banquet-requests{display:flex;flex-direction:column;gap:.7rem}
+.banquet-req{background:#fff;border-radius:14px;padding:.9rem 1rem;border:1px solid var(--blush)}
+.banquet-req .req-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem;flex-wrap:wrap;gap:.4rem}
+.banquet-req h4{font-size:.88rem;font-weight:600;color:var(--dark)}
+.status-badge{font-size:.7rem;padding:.18rem .65rem;border-radius:12px;font-weight:500;white-space:nowrap}
+.status-badge.new{background:#fff3cd;color:#7a5a00}
+.status-badge.confirmed{background:#d4edda;color:#155724}
+.banquet-req p{font-size:.78rem;color:#8a6060;line-height:1.5}
+.confirm-btn{background:#7a9e7e;color:#fff;border:none;border-radius:8px;padding:.28rem .75rem;font-size:.75rem;cursor:pointer;margin-top:.3rem;font-family:'Noto Sans KR',Arial,sans-serif;transition:background .15s}
+.confirm-btn:hover{background:#5a8060}
+
+/* Admin reviews */
+.admin-review-item{background:#fff;border-radius:14px;border:1px solid var(--blush);padding:.9rem 1rem;margin-bottom:.7rem}
+.admin-review-item .rev-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.4rem;margin-bottom:.4rem}
+.admin-review-item h4{font-size:.88rem;font-weight:600}
+.admin-review-item p{font-size:.8rem;color:#5a3a3a;line-height:1.5}
+.rev-stars{color:#f5c518}
+.del-review-btn{background:#ffe0e0;color:#c44;border:none;border-radius:8px;padding:.25rem .6rem;font-size:.72rem;cursor:pointer}
+.del-review-btn:hover{background:#ffb5b5}
+
+/* NOTIFICATION */
+.notif{position:fixed;bottom:calc(var(--mobile-nav-h) + 1rem);right:1rem;z-index:1000;background:var(--bark);color:#fff;padding:.7rem 1.2rem;border-radius:30px;font-size:.82rem;box-shadow:0 4px 20px rgba(0,0,0,.25);transform:translateY(20px);opacity:0;transition:all .3s;pointer-events:none;max-width:calc(100vw - 2rem)}
+.notif.show{transform:none;opacity:1}
+
+/* FOOTER */
+footer{background:var(--bark);color:#f0d8d8;padding:2rem 1.5rem;text-align:center;margin-top:2rem}
+footer h3{font-family:'Cormorant Garamond','Georgia',serif;font-size:1.4rem;margin-bottom:.4rem}
+footer p{font-size:.8rem;opacity:.75;line-height:1.7}
+.footer-social{display:flex;gap:1.2rem;justify-content:center;margin:1rem 0}
+.footer-social a{color:var(--sakura);text-decoration:none;font-size:.82rem;display:flex;align-items:center;gap:.4rem;transition:color .2s}
+.footer-social a:hover{color:#fff}
+
+/* RESPONSIVE */
+@media(max-width:700px){
+  body{padding-bottom:var(--mobile-nav-h)}
+  #mainNav{display:none}
+  .cart-label{display:none}
+  .mobile-nav{display:flex}
+  .notif{bottom:calc(var(--mobile-nav-h) + .8rem)}
+  .menu-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.9rem;padding:1rem .8rem}
+  .menu-card-img{height:130px;font-size:2.4rem}
+  .menu-card-body{padding:.8rem}
+  .form-row{grid-template-columns:1fr}
+  .hero{min-height:360px}
+  .hero-deco{font-size:6rem}
+  .features{grid-template-columns:1fr 1fr}
+  .page-header{padding:2rem 1rem 1.4rem}
+  .page-header h2{font-size:1.7rem}
+  footer{margin-bottom:0}
+}
+@media(max-width:400px){
+  .menu-grid{grid-template-columns:1fr 1fr}
+  header{padding:0 .7rem;gap:.4rem}
+  .social-btn{width:28px;height:28px;font-size:.8rem}
+  .cart-btn{padding:.3rem .6rem}
+}
+
+</style>
+</head>
+<body>
+
+<div class="sakura-bg" id="sakuraBg"></div>
+
+<!-- HEADER -->
+<header id="mainHeader">
+  <div class="logo" onclick="showPage('home')">
+    <img src="img/logo.png" alt="Han's Garden" class="logo-img" onerror="this.style.display='none';document.getElementById('logoFallback').style.display='flex'">
+    <span id="logoFallback" style="display:flex;align-items:center;gap:6px"><span>🌸</span><span class="logo-text">Han's Garden</span></span>
+  </div>
+  <nav id="mainNav">
+    <button onclick="showPage('home')" class="nav-btn active" id="nav-home">Главная</button>
+    <button onclick="showPage('menu')" class="nav-btn" id="nav-menu">Меню</button>
+    <button onclick="showPage('bar')" class="nav-btn" id="nav-bar">Бар</button>
+    <button onclick="showPage('banquet')" class="nav-btn" id="nav-banquet">Банкет</button>
+    <button onclick="showPage('reviews')" class="nav-btn" id="nav-reviews">Отзывы</button>
+    <button onclick="showPage('about')" class="nav-btn" id="nav-about">О нас</button>
+  </nav>
+  <div class="header-right">
+    <button class="lang-btn" onclick="cycleLang()">🌐 <span id="langLabel">RU</span></button>
+    <a href="https://instagram.com/hans_ria_cafe" target="_blank" class="social-btn insta" title="Instagram">📸</a>
+    <a href="https://wa.me/996558171942" target="_blank" class="social-btn wa" title="WhatsApp">💬</a>
+    <button class="cart-btn" onclick="showPage('cart')" id="cartBtnHeader">
+      🛒 <span class="cart-label">Корзина</span>
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</header>
+
+<!-- MOBILE NAV -->
+<nav class="mobile-nav">
+  <button onclick="showPage('home')" class="mobile-nav-btn" id="mnav-home">🏠<span>Главная</span></button>
+  <button onclick="showPage('menu')" class="mobile-nav-btn" id="mnav-menu">🍜<span>Меню</span></button>
+  <button onclick="showPage('cart')" class="mobile-nav-btn" id="mnav-cart">🛒<span>Корзина <span id="mCartCount" class="m-badge"></span></span></button>
+  <button onclick="showPage('banquet')" class="mobile-nav-btn" id="mnav-banquet">🎉<span>Банкет</span></button>
+  <button onclick="showPage('reviews')" class="mobile-nav-btn" id="mnav-reviews">⭐<span>Отзывы</span></button>
+</nav>
+
+<div class="notif" id="notif"></div>
+
+<!-- WAITER MODAL -->
+<div class="modal-overlay hidden" id="waiterModal" onclick="closeModal(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div style="font-size:2.5rem;margin-bottom:0.4rem">🍽️</div>
+    <h2>Ваш заказ</h2>
+    <p>Покажите официанту</p>
+    <div class="modal-cart-list" id="modalCartList"></div>
+    <div class="modal-total" id="modalTotal"></div>
+    <button class="btn-primary" onclick="closeModal()" style="width:100%;margin-top:1rem">Закрыть</button>
+  </div>
+</div>
+
+<!-- ===== HOME ===== -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-deco left">한</div>
+    <div class="hero-deco right">정</div>
+    <div class="hero-content">
+      <div class="hero-logo-wrap">
+        <img src="img/logo.png" alt="Han's Garden" class="hero-logo" onerror="this.style.display='none'">
+      </div>
+      <div class="hero-badge">🌸 Корейская кухня · Бишкек</div>
+      <h1>Han's Garden<br><em>&amp; Ria Cafe</em></h1>
+      <p id="heroDesc">Подлинная корейская кухня в сердце Бишкека. Традиционные рецепты, свежие ингредиенты, домашняя атмосфера.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('menu')">🍜 Смотреть меню</button>
+        <button class="btn-outline" onclick="showPage('banquet')">🎉 Забронировать банкет</button>
+      </div>
+    </div>
+  </div>
+  <div class="sakura-divider">🌸 🌸 🌸</div>
+  <div class="features">
+    <div class="feature-card"><div class="icon">🍜</div><h3>Рамен & Кукси</h3><p>Горячие и холодные супы по традиционным корейским рецептам</p></div>
+    <div class="feature-card"><div class="icon">🐟</div><h3>Морепродукты</h3><p>Тушёная рыба, горячие супы с морепродуктами</p></div>
+    <div class="feature-card"><div class="icon">🥂</div><h3>Барное меню</h3><p>Коктейли, вина, корейские напитки</p></div>
+    <div class="feature-card"><div class="icon">🎉</div><h3>Банкеты</h3><p>Корпоративы, дни рождения, семейные праздники</p></div>
+  </div>
+  <div class="sakura-divider">🌸 🌸 🌸</div>
+  <div class="home-social">
+    <p>Мы в соцсетях:</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:0.8rem">
+      <a href="https://instagram.com/hans_ria_cafe" target="_blank" class="btn-outline" style="text-decoration:none">📸 Instagram</a>
+      <a href="https://wa.me/996558171942" target="_blank" class="btn-primary" style="text-decoration:none">💬 WhatsApp</a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MENU (основное) ===== -->
+<div class="page" id="page-menu">
+  <div class="page-header">
+    <h2>🍜 Основное меню</h2>
+    <p>Корейская и паназиатская кухня</p>
+  </div>
+  <div class="menu-search-wrap">
+    <input type="text" class="menu-search" id="menuSearch" placeholder="🔍 Поиск блюда..." oninput="searchMenu()">
+  </div>
+  <div class="category-tabs" id="categoryTabs"></div>
+  <div class="menu-grid" id="menuGrid"></div>
+  <div class="no-results hidden" id="noResults">😔 Ничего не найдено</div>
+</div>
+
+<!-- ===== BAR MENU ===== -->
+<div class="page" id="page-bar">
+  <div class="page-header">
+    <h2>🥂 Барное меню</h2>
+    <p>Коктейли, вина, корейские напитки</p>
+  </div>
+  <div class="menu-search-wrap">
+    <input type="text" class="menu-search" id="barSearch" placeholder="🔍 Поиск напитка..." oninput="searchBar()">
+  </div>
+  <div class="category-tabs" id="barCategoryTabs"></div>
+  <div class="menu-grid" id="barGrid"></div>
+  <div class="no-results hidden" id="barNoResults">😔 Ничего не найдено</div>
+</div>
+
+<!-- ===== CART ===== -->
+<div class="page" id="page-cart">
+  <div class="page-header">
+    <h2>Корзина</h2>
+    <p>Покажите заказ официанту</p>
+  </div>
+  <div class="cart-container" id="cartContainer"></div>
+</div>
+
+<!-- ===== BANQUET ===== -->
+<div class="page" id="page-banquet">
+  <div class="page-header">
+    <h2>Бронирование банкета</h2>
+    <p>Организуем любое торжество</p>
+  </div>
+  <div class="banquet-container">
+    <div class="banquet-info-cards">
+      <div class="banquet-info-card"><div class="icon">👥</div><h4>До 30 гостей</h4><p>Уютный зал</p></div>
+      <div class="banquet-info-card"><div class="icon">🍽️</div><h4>Корейское меню</h4><p>Специальное банкетное меню</p></div>
+      <div class="banquet-info-card"><div class="icon">🎂</div><h4>Любой повод</h4><p>Дни рождения, корпоративы</p></div>
+    </div>
+    <div class="form-card" id="banquetFormCard">
+      <h3>Оставить заявку</h3>
+      <div class="form-row">
+        <div class="form-group"><label>Ваше имя *</label><input type="text" id="bName" placeholder="Айгерим"></div>
+        <div class="form-group"><label>Телефон *</label><input type="tel" id="bPhone" placeholder="+996 xxx xxx xxx"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Дата *</label><input type="date" id="bDate"></div>
+        <div class="form-group"><label>Время</label><input type="time" id="bTime"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Кол-во гостей *</label><input type="number" id="bGuests" placeholder="10" min="2" max="30"></div>
+        <div class="form-group"><label>Тип мероприятия</label>
+          <select id="bType">
+            <option>День рождения</option><option>Корпоратив</option><option>Свадьба</option><option>Другое</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label>Пожелания</label><textarea id="bWishes" placeholder="Особые пожелания, аллергии..."></textarea></div>
+      <button class="submit-btn" onclick="submitBanquet()">🌸 Отправить заявку</button>
+    </div>
+    <div class="success-msg" id="banquetSuccess">
+      <div class="icon">🌸</div>
+      <h3>Заявка отправлена!</h3>
+      <p>Мы свяжемся с вами через WhatsApp для подтверждения.</p>
+      <button class="btn-primary" onclick="resetBanquet()" style="margin-top:1rem">Новая заявка</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== REVIEWS ===== -->
+<div class="page" id="page-reviews">
+  <div class="page-header">
+    <h2>⭐ Отзывы</h2>
+    <p>Поделитесь своим впечатлением</p>
+  </div>
+  <div class="reviews-container">
+    <!-- Review form -->
+    <div class="form-card review-form-card">
+      <h3>Оставить отзыв</h3>
+
+      <!-- Stars -->
+      <div class="form-group">
+        <label>Ваша оценка</label>
+        <div class="stars-input" id="starsInput">
+          <span class="star-btn" data-val="1" onclick="setRating(1)">★</span>
+          <span class="star-btn" data-val="2" onclick="setRating(2)">★</span>
+          <span class="star-btn" data-val="3" onclick="setRating(3)">★</span>
+          <span class="star-btn" data-val="4" onclick="setRating(4)">★</span>
+          <span class="star-btn" data-val="5" onclick="setRating(5)">★</span>
+        </div>
+      </div>
+
+      <!-- Quick tags based on rating -->
+      <div class="quick-tags" id="quickTags" style="display:none">
+        <p class="quick-tags-label" id="quickTagsLabel">Что именно?</p>
+        <div class="tags-wrap" id="tagsWrap"></div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group"><label>Ваше имя *</label><input type="text" id="rName" placeholder="Айгерим"></div>
+        <div class="form-group"><label>Телефон</label><input type="tel" id="rPhone" placeholder="+996 xxx xxx xxx"></div>
+      </div>
+      <div class="form-group">
+        <label>Ваш отзыв *</label>
+        <textarea id="rText" placeholder="Расскажите о вашем визите..." rows="3"></textarea>
+      </div>
+      <button class="submit-btn" onclick="submitReview()">⭐ Опубликовать отзыв</button>
+    </div>
+
+    <!-- Reviews list -->
+    <div class="reviews-list" id="reviewsList"></div>
+  </div>
+</div>
+
+<!-- ===== ABOUT ===== -->
+<div class="page" id="page-about">
+  <div class="page-header">
+    <h2>О ресторане</h2>
+    <p>Han's Garden & Ria Cafe — корейская культура в Бишкеке</p>
+  </div>
+  <div class="about-grid">
+    <div class="about-card"><div class="icon">👨‍🍳</div><h3>Корейский повар</h3><p>Блюда готовятся поваром прямо из Кореи, гарантируя подлинный вкус.</p></div>
+    <div class="about-card">
+      <div class="icon">🕐</div><h3>Режим работы</h3>
+      <p>Пн–Сб: <strong>круглосуточно</strong><br>
+      Воскресенье: до 22:00<br>
+      <span style="font-size:0.75rem;color:var(--deep-rose)">❗ Кухня вс: до 21:30</span></p>
+    </div>
+    <div class="about-card"><div class="icon">📍</div><h3>Адрес</h3><p>Проспект Чынгыза Айтматова, 70<br>Бишкек, Кыргызстан</p></div>
+    <div class="about-card"><div class="icon">📞</div><h3>Контакты</h3><p>+996 558 171 942<br>+996 773 305 675<br>+996 312 542 123</p></div>
+  </div>
+  <div class="map-section">
+    <h3>Как нас найти</h3>
+    <div class="map-placeholder">
+      <div class="icon">🗺️</div>
+      <strong>Проспект Чынгыза Айтматова, 70</strong><br>
+      Октябрьский район, Бишкек 720044<br><br>
+      <a href="https://maps.google.com/?q=Han's+Garden+Ria+Cafe+Bishkek" target="_blank" style="color:var(--deep-rose)">📍 Открыть в Google Maps</a>
+    </div>
+  </div>
+  <div class="home-social" style="margin-top:2rem">
+    <p>Мы в соцсетях:</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:0.8rem">
+      <a href="https://instagram.com/hans_ria_cafe" target="_blank" class="btn-outline" style="text-decoration:none">📸 Instagram</a>
+      <a href="https://wa.me/996558171942" target="_blank" class="btn-primary" style="text-decoration:none">💬 WhatsApp</a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ADMIN ===== -->
+<div class="page" id="page-admin">
+  <div id="adminLogin" class="admin-login">
+    <div style="font-size:2.5rem;margin-bottom:0.6rem">🔐</div>
+    <h2>Панель администратора</h2>
+    <p>Введите пароль для входа</p>
+    <div class="form-group"><input type="password" id="adminPass" placeholder="Пароль" onkeydown="if(event.key==='Enter')doAdminLogin()"></div>
+    <button class="submit-btn" onclick="doAdminLogin()">Войти</button>
+  </div>
+  <div id="adminPanel" style="display:none;padding:1.5rem;max-width:1000px;margin:0 auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:0.8rem">
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--bark)">🌸 Панель администратора</h2>
+      <button class="edit-btn" onclick="doAdminLogout()">Выйти</button>
+    </div>
+    <div class="admin-tabs">
+      <button class="admin-tab-btn active" onclick="switchAdminTab('dishes',this)">🍽️ Блюда</button>
+      <button class="admin-tab-btn" onclick="switchAdminTab('bar',this)">🥂 Бар</button>
+      <button class="admin-tab-btn" onclick="switchAdminTab('banquets',this)">🎉 Заявки</button>
+      <button class="admin-tab-btn" onclick="switchAdminTab('adminreviews',this)">⭐ Отзывы</button>
+    </div>
+
+    <!-- Dishes -->
+    <div class="admin-section active" id="admin-dishes">
+      <div class="admin-dishes-list" id="adminDishesList"></div>
+      <div class="add-dish-form" id="dishForm">
+        <h3 id="dishFormTitle">➕ Добавить блюдо</h3>
+        <input type="hidden" id="editDishId">
+        <input type="hidden" id="editDishType" value="main">
+        <div class="form-row">
+          <div class="form-group"><label>Название (RU)</label><input type="text" id="dName" placeholder="Кукси классический"></div>
+          <div class="form-group"><label>Название (EN)</label><input type="text" id="dNameEn" placeholder="Classic Kuksi"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Категория</label>
+            <select id="dCat">
+              <option>Супы</option><option>Рамен</option><option>Рыба</option>
+              <option>Мясо</option><option>Закуски</option><option>Десерты</option><option>Напитки</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Цена (сом)</label><input type="number" id="dPrice" placeholder="450"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Описание</label><input type="text" id="dDesc" placeholder="Холодная лапша с овощами..."></div>
+          <div class="form-group"><label>Эмодзи</label><input type="text" id="dEmoji" placeholder="🍜" maxlength="4"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Острота</label>
+            <select id="dSpice">
+              <option value="">— не указано —</option>
+              <option value="mild">🟢 Не острое</option>
+              <option value="medium">🟡 Средне острое</option>
+              <option value="hot">🔴 Острое</option>
+              <option value="xhot">🌶️ Очень острое</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Метки (через запятую)</label>
+            <input type="text" id="dTags" placeholder="хит, новинка, веган">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Фото блюда — ссылка с ImgBB</label>
+          <div style="display:flex;gap:.5rem;align-items:center">
+            <input type="text" id="dImgUrl" placeholder="https://i.ibb.co/xxx/photo.jpg" oninput="previewImgUrl()">
+            <a href="https://imgbb.com" target="_blank" class="edit-btn" style="white-space:nowrap;padding:.5rem .8rem;text-decoration:none;font-size:.75rem;display:inline-flex;align-items:center">📤 ImgBB</a>
+          </div>
+          <p style="font-size:.7rem;color:#aaa;margin-top:.3rem">Загрузи на imgbb.com → нажми Direct Link → вставь ссылку сюда</p>
+          <img id="dImgPreview" style="display:none;width:100px;height:100px;border-radius:10px;object-fit:cover;margin-top:.5rem">
+        </div>
+        <div style="display:flex;gap:0.8rem;flex-wrap:wrap">
+          <button class="submit-btn" onclick="saveDish()" style="flex:1;min-width:140px">💾 Сохранить</button>
+          <button class="edit-btn" onclick="cancelEdit()" style="padding:0.9rem 1.5rem;border-radius:30px">Отмена</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bar -->
+    <div class="admin-section" id="admin-bar">
+      <div class="admin-dishes-list" id="adminBarList"></div>
+      <div class="add-dish-form">
+        <h3 id="barFormTitle">➕ Добавить позицию в бар</h3>
+        <input type="hidden" id="editBarId">
+        <div class="form-row">
+          <div class="form-group"><label>Название (RU)</label><input type="text" id="bdrName" placeholder="Макколи"></div>
+          <div class="form-group"><label>Название (EN)</label><input type="text" id="bdrNameEn" placeholder="Makgeolli"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Категория</label>
+            <select id="bdrCat">
+              <option>Коктейли</option><option>Вино</option><option>Пиво</option>
+              <option>Корейские напитки</option><option>Безалкогольные</option><option>Чай</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Цена (сом)</label><input type="number" id="bdrPrice" placeholder="350"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Описание</label><input type="text" id="bdrDesc" placeholder="Традиционный корейский рисовый напиток..."></div>
+          <div class="form-group"><label>Эмодзи</label><input type="text" id="bdrEmoji" placeholder="🍶" maxlength="4"></div>
+        </div>
+        <div class="form-group">
+          <label>Фото</label>
+          <div style="display:flex;gap:.5rem;align-items:center">
+            <input type="text" id="bdrImgUrl" placeholder="https://i.ibb.co/xxx/photo.jpg" oninput="previewBarImgUrl()">
+            <a href="https://imgbb.com" target="_blank" class="edit-btn" style="white-space:nowrap;padding:.5rem .8rem;text-decoration:none;font-size:.75rem;display:inline-flex;align-items:center">📤 ImgBB</a>
+          </div>
+          <p style="font-size:.7rem;color:#aaa;margin-top:.3rem">Загрузи на imgbb.com → нажми Direct Link → вставь ссылку сюда</p>
+          <img id="bdrImgPreview" style="display:none;width:100px;height:100px;border-radius:10px;object-fit:cover;margin-top:.5rem">
+        </div>
+        <div style="display:flex;gap:0.8rem;flex-wrap:wrap">
+          <button class="submit-btn" onclick="saveBarItem()" style="flex:1;min-width:140px">💾 Сохранить</button>
+          <button class="edit-btn" onclick="cancelBarEdit()" style="padding:0.9rem 1.5rem;border-radius:30px">Отмена</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Banquets -->
+    <div class="admin-section" id="admin-banquets">
+      <div class="banquet-requests" id="adminBanquetsList"></div>
+    </div>
+
+    <!-- Reviews admin -->
+    <div class="admin-section" id="admin-adminreviews">
+      <div id="adminReviewsList"></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <h3>Han's Garden & Ria Cafe 🌸</h3>
+  <p>Проспект Чынгыза Айтматова, 70 · Бишкек, Кыргызстан</p>
+  <p style="font-size:0.8rem;margin-top:0.3rem;opacity:0.8">Пн–Сб: круглосуточно &nbsp;|&nbsp; Вс: до 22:00 &nbsp;<span style="color:#ffb5c8">❗ Кухня вс до 21:30</span></p>
+  <div class="footer-social">
+    <a href="https://instagram.com/hans_ria_cafe" target="_blank">📸 Instagram</a>
+    <a href="https://wa.me/996558171942" target="_blank">💬 WhatsApp</a>
+  </div>
+  <p style="font-size:0.75rem;opacity:0.5;margin-top:0.6rem">© 2025 Han's Garden & Ria Cafe</p>
+  <p style="margin-top:0.8rem"><a href="#" onclick="showPage('admin');return false;" style="color:rgba(255,255,255,0.12);font-size:0.6rem;text-decoration:none">⚙</a></p>
+</footer>
+
+<script>
+'use strict';
+
+const WHATSAPP_NUMBER = '996558171942';
+
+// ===== LANG =====
+let currentLang = 'ru';
+const langs = ['ru','en','kg'];
+const langLabels = {ru:'RU',en:'EN',kg:'KG'};
+const T = {
+  ru:{ heroDesc:'Подлинная корейская кухня в сердце Бишкека. Традиционные рецепты, свежие ингредиенты, домашняя атмосфера.',
+       cartEmpty:'Корзина пуста',goMenu:'Перейти к меню',total:'Итого:',showWaiter:'🍽️ Показать официанту',
+       yourOrder:'Ваш заказ',showToWaiter:'Покажите официанту',close:'Закрыть',added:'добавлено',
+       removed:'Блюдо удалено',saved:'Сохранено',fillRequired:'⚠️ Заполните обязательные поля',
+       wrongPass:'❌ Неверный пароль',confirmed:'✅ Заявка подтверждена',noRequests:'Заявок пока нет',
+       reviewSent:'⭐ Отзыв опубликован!',fillReview:'⚠️ Заполните имя и отзыв' },
+  en:{ heroDesc:'Authentic Korean cuisine in the heart of Bishkek.',
+       cartEmpty:'Cart is empty',goMenu:'Go to Menu',total:'Total:',showWaiter:'🍽️ Show to Waiter',
+       yourOrder:'Your Order',showToWaiter:'Show to the waiter',close:'Close',added:'added',
+       removed:'Dish removed',saved:'Saved',fillRequired:'⚠️ Fill required fields',
+       wrongPass:'❌ Wrong password',confirmed:'✅ Request confirmed',noRequests:'No requests yet',
+       reviewSent:'⭐ Review published!',fillReview:'⚠️ Fill name and review' },
+  kg:{ heroDesc:'Бишкектин жүрөгүндө чыныгы кореялык тамак-аш.',
+       cartEmpty:'Себет бош',goMenu:'Менюга өтүү',total:'Жыйынтык:',showWaiter:'🍽️ Официантка көрсөтүү',
+       yourOrder:'Сиздин заказ',showToWaiter:'Официантка көрсөтүңүз',close:'Жабуу',added:'кошулду',
+       removed:'Жок кылынды',saved:'Сакталды',fillRequired:'⚠️ Талааларды толтуруңуз',
+       wrongPass:'❌ Туура эмес сырсөз',confirmed:'✅ Ырасталды',noRequests:'Суроолор жок',
+       reviewSent:'⭐ Пикир жарыяланды!',fillReview:'⚠️ Аты жана пикир толтуруңуз' }
+};
+function t(k){ return T[currentLang]?.[k] || T.ru[k] || k; }
+
+const spiceLabels = {''  :'',mild:'🟢 Не острое',medium:'🟡 Средне острое',hot:'🔴 Острое',xhot:'🌶️ Очень острое'};
+
+// ===== QUICK TAGS =====
+const BAD_TAGS  = ['Плохой сервис','Блюдо не понравилось','Долгое ожидание','Холодная еда','Грязно'];
+const GOOD_TAGS = ['Отличный сервис','Вкусная еда','Быстрое обслуживание','Уютная атмосфера','Рекомендую всем'];
+
+// ===== DEFAULT DISHES (main menu) =====
+const defaultDishes = [
+  {id:1, name:'Кукси классический',    nameEn:'Classic Kuksi',     cat:'Супы',    price:380,desc:'Холодная лапша с овощами и соевым бульоном',emoji:'🍜',img:'',spice:'mild',  tags:'хит'},
+  {id:2, name:'Рамен с морепродуктами',nameEn:'Seafood Ramen',     cat:'Рамен',   price:450,desc:'Горячий суп с морепродуктами и поджаренным рисом',emoji:'🦐',img:'',spice:'medium',tags:''},
+  {id:3, name:'Камбала тушёная',       nameEn:'Braised Flounder',  cat:'Рыба',    price:520,desc:'Тушёная камбала с картофелем и острым соусом',emoji:'🐟',img:'',spice:'hot',   tags:''},
+  {id:4, name:'Скумбрия в соусе',      nameEn:'Mackerel in Sauce', cat:'Рыба',    price:480,desc:'Скумбрия с кабачками и белой редькой',emoji:'🐠',img:'',spice:'medium',tags:''},
+  {id:5, name:'Дакгалби',              nameEn:'Dak Galbi',         cat:'Мясо',    price:560,desc:'Маринованное куриное филе с капустой и рисовыми брусочками',emoji:'🍗',img:'',spice:'medium',tags:'хит'},
+  {id:6, name:'Острый чиге',           nameEn:'Spicy Chige',       cat:'Супы',    price:420,desc:'Традиционный горшочек с тофу и кимчи',emoji:'🥘',img:'',spice:'xhot',tags:''},
+  {id:7, name:'Корн-дог',              nameEn:'Korean Corn Dog',   cat:'Закуски', price:190,desc:'Хрустящий корн-дог с тянущимся сыром',emoji:'🌭',img:'',spice:'',    tags:'новинка'},
+  {id:8, name:'Корейский салат',       nameEn:'Korean Salad',      cat:'Закуски', price:220,desc:'Освежающий корейский салат с соусом',emoji:'🥗',img:'',spice:'',    tags:'веган'},
+  {id:9, name:'Зелёный чай',           nameEn:'Green Tea',         cat:'Напитки', price:120,desc:'Традиционный корейский зелёный чай',emoji:'🍵',img:'',spice:'',    tags:''},
+  {id:10,name:'Сиккё',                 nameEn:'Sikhye',            cat:'Напитки', price:150,desc:'Традиционный сладкий рисовый напиток',emoji:'🥛',img:'',spice:'',    tags:''},
+  {id:11,name:'Хотток',                nameEn:'Hotteok',           cat:'Десерты', price:180,desc:'Корейские блинчики с орехами и сахаром',emoji:'🥞',img:'',spice:'',  tags:'хит'},
+  {id:12,name:'Пинсу',                 nameEn:'Bingsu',            cat:'Десерты', price:250,desc:'Тёртый лёд с бобами, фруктами и сиропом',emoji:'🍧',img:'',spice:'',  tags:'новинка'},
+  {id:13,name:'Якгва',                 nameEn:'Yakgwa',            cat:'Десерты', price:160,desc:'Традиционное корейское печенье с мёдом и имбирём',emoji:'🍯',img:'',spice:'',  tags:''},
+];
+
+// ===== DEFAULT BAR MENU =====
+const defaultBar = [
+  {id:101,name:'Макколи',       nameEn:'Makgeolli',    cat:'Корейские напитки',price:280,desc:'Традиционный корейский рисовый напиток с нежной пеной',emoji:'🍶',img:''},
+  {id:102,name:'Соджу',         nameEn:'Soju',          cat:'Корейские напитки',price:320,desc:'Классический корейский дистиллят с мягким вкусом',emoji:'🥃',img:''},
+  {id:103,name:'Плам вайн',     nameEn:'Plum Wine',     cat:'Вино',             price:350,desc:'Сладкое сливовое вино Мэшил чонджу',emoji:'🍷',img:''},
+  {id:104,name:'Корейское пиво',nameEn:'Korean Beer',   cat:'Пиво',             price:240,desc:'Hite или Cass — освежающее корейское пиво',emoji:'🍺',img:''},
+  {id:105,name:'Хурма коктейль',nameEn:'Persimmon Mix', cat:'Коктейли',         price:390,desc:'Авторский коктейль с хурмой, имбирём и цитрусом',emoji:'🍹',img:''},
+  {id:106,name:'Розовый сакура',nameEn:'Sakura Rose',   cat:'Коктейли',         price:420,desc:'Коктейль с личи, розой и просекко',emoji:'🌸',img:''},
+  {id:107,name:'Омija чай',     nameEn:'Omija Tea',     cat:'Чай',              price:180,desc:'Чай из ягод омиджа — кисло-сладкий, освежающий',emoji:'🍵',img:''},
+  {id:108,name:'Юджа чай',      nameEn:'Yuja Tea',      cat:'Чай',              price:160,desc:'Чай из юдзу с мёдом — тёплый и ароматный',emoji:'🍊',img:''},
+  {id:109,name:'Корейский колд брю',nameEn:'Korean Cold Brew',cat:'Безалкогольные',price:200,desc:'Холодный заварной кофе в корейском стиле',emoji:'☕',img:''},
+  {id:110,name:'Банановое молоко',nameEn:'Banana Milk', cat:'Безалкогольные',   price:150,desc:'Знаменитое корейское банановое молоко Binggrae',emoji:'🍌',img:''},
+];
+
+let dishes = [...defaultDishes];
+let barItems = [...defaultBar];
+let nextDishId = 20;
+let nextBarId = 200;
+let nextBanquetId = 3;
+let nextReviewId = 10;
+let adminLoggedIn = false;
+let activeCategory = 'Все';
+let activeBarCategory = 'Все';
+let selectedRating = 0;
+let selectedQuickTags = new Set();
+
+// ===== LOCALSTORAGE =====
+function saveToStorage(){
+  try{ localStorage.setItem('hg_dishes', JSON.stringify(dishes)); localStorage.setItem('hg_nextDishId', nextDishId); }
+  catch(e){ try{ localStorage.setItem('hg_dishes', JSON.stringify(dishes.map(d=>({...d,img:''})))); }catch(e2){} }
+  try{ localStorage.setItem('hg_bar', JSON.stringify(barItems)); localStorage.setItem('hg_nextBarId', nextBarId); }
+  catch(e){ try{ localStorage.setItem('hg_bar', JSON.stringify(barItems.map(d=>({...d,img:''})))); }catch(e2){} }
+  try{ localStorage.setItem('hg_reviews', JSON.stringify(reviews)); }catch(e){}
+}
+function loadFromStorage(){
+  try{
+    const d = localStorage.getItem('hg_dishes');
+    if(d){ const p=JSON.parse(d); if(Array.isArray(p)&&p.length){ dishes=p.map(x=>({spice:'',tags:'',...x})); nextDishId=parseInt(localStorage.getItem('hg_nextDishId')||'20'); }}
+    const b = localStorage.getItem('hg_bar');
+    if(b){ const p=JSON.parse(b); if(Array.isArray(p)&&p.length){ barItems=p; nextBarId=parseInt(localStorage.getItem('hg_nextBarId')||'200'); }}
+    const r = localStorage.getItem('hg_reviews');
+    if(r){ const p=JSON.parse(r); if(Array.isArray(p)){ reviews=p; nextReviewId=Math.max(10,...p.map(x=>x.id+1)); }}
+  }catch(e){}
+}
+
+// ===== REVIEWS =====
+let reviews = [
+  {id:1,name:'Айгерим',phone:'',rating:5,tags:['Отличный сервис','Вкусная еда'],text:'Были с подругой, всё очень понравилось! Особенно рамен 🌸',date:'2025-04-10'},
+  {id:2,name:'Саламат',phone:'',rating:4,tags:['Вкусная еда'],text:'Вкусно и уютно, рекомендую дакгалби!',date:'2025-04-12'},
+  {id:3,name:'Зарина',phone:'',rating:2,tags:['Долгое ожидание'],text:'Ждали долго, но еда была вкусная.',date:'2025-04-14'},
+];
+
+function setRating(val){
+  selectedRating = val;
+  selectedQuickTags.clear();
+  document.querySelectorAll('.star-btn').forEach((s,i) => {
+    s.classList.toggle('active', i < val);
+  });
+  const wrap = document.getElementById('quickTags');
+  const tagsWrap = document.getElementById('tagsWrap');
+  const label = document.getElementById('quickTagsLabel');
+  wrap.style.display = 'block';
+  const tagList = val <= 3 ? BAD_TAGS : GOOD_TAGS;
+  label.textContent = val <= 3 ? '😔 Что именно?' : '😊 Что понравилось?';
+  tagsWrap.innerHTML = tagList.map(tag =>
+    `<span class="quick-tag${val<=3?' neg':''}" onclick="toggleQuickTag(this,'${tag}')">${tag}</span>`
+  ).join('');
+}
+
+function toggleQuickTag(el, tag){
+  el.classList.toggle('selected');
+  if(selectedQuickTags.has(tag)) selectedQuickTags.delete(tag);
+  else selectedQuickTags.add(tag);
+}
+
+function submitReview(){
+  const name = document.getElementById('rName').value.trim();
+  const phone = document.getElementById('rPhone').value.trim();
+  const text = document.getElementById('rText').value.trim();
+  if(!name || !text){ showNotif(t('fillReview')); return; }
+  if(!selectedRating){ showNotif('⚠️ Выберите оценку'); return; }
+  const now = new Date();
+  const date = now.toISOString().slice(0,10);
+  reviews.unshift({ id: nextReviewId++, name, phone, rating: selectedRating, tags: [...selectedQuickTags], text, date });
+  saveToStorage();
+  showNotif(t('reviewSent'));
+  // reset
+  document.getElementById('rName').value='';
+  document.getElementById('rPhone').value='';
+  document.getElementById('rText').value='';
+  selectedRating=0; selectedQuickTags.clear();
+  document.querySelectorAll('.star-btn').forEach(s=>s.classList.remove('active'));
+  document.getElementById('quickTags').style.display='none';
+  renderReviews();
+}
+
+function renderReviews(){
+  const list = document.getElementById('reviewsList');
+  if(!list) return;
+  if(!reviews.length){
+    list.innerHTML='<div class="reviews-empty"><div class="icon">⭐</div><p>Отзывов пока нет. Будьте первым!</p></div>';
+    return;
+  }
+  list.innerHTML = reviews.map(r => {
+    const stars = '★'.repeat(r.rating) + '☆'.repeat(5-r.rating);
+    const tagsHtml = r.tags.length ? `<div class="review-tags-row">${r.tags.map(t=>`<span class="review-tag">${t}</span>`).join('')}</div>` : '';
+    return `<div class="review-card">
+      <div class="review-card-header">
+        <span class="review-author">${r.name}</span>
+        <span class="review-stars">${stars}</span>
+      </div>
+      ${tagsHtml}
+      <p class="review-text">${r.text}</p>
+      <p class="review-date">${r.date}</p>
+    </div>`;
+  }).join('');
+}
+
+// ===== BADGES =====
+function spiceBadge(spice){ return spice?`<span class="badge badge-spice">${spiceLabels[spice]}</span>`:''; }
+function tagBadges(tags){
+  if(!tags) return '';
+  const map={хит:'badge-hit',новинка:'badge-new',веган:'badge-vegan','без глютена':'badge-gf'};
+  return tags.split(',').map(t=>t.trim()).filter(Boolean)
+    .map(tag=>`<span class="badge ${map[tag.toLowerCase()]||'badge-default'}">${tag}</span>`).join('');
+}
+
+// ===== MENU =====
+function renderMenu(){
+  const tabs=document.getElementById('categoryTabs');
+  const grid=document.getElementById('menuGrid');
+  if(!tabs||!grid) return;
+  const q=(document.getElementById('menuSearch')||{}).value?.toLowerCase()||'';
+  const cats=['Все',...new Set(dishes.map(d=>d.cat))];
+  tabs.innerHTML=cats.map(c=>`<button class="cat-tab${c===activeCategory?' active':''}" onclick="filterCat('${c}')">${c}</button>`).join('');
+  let filtered = activeCategory==='Все' ? dishes : dishes.filter(d=>d.cat===activeCategory);
+  if(q) filtered=filtered.filter(d=>d.name.toLowerCase().includes(q)||d.nameEn.toLowerCase().includes(q)||d.desc.toLowerCase().includes(q));
+  const noRes=document.getElementById('noResults');
+  if(noRes) noRes.classList.toggle('hidden', filtered.length>0);
+  grid.innerHTML=filtered.map(d=>{
+    const thumb=d.img?`<div class="menu-card-img"><img src="${d.img}" alt="${d.name}"></div>`:`<div class="menu-card-img">${d.emoji}</div>`;
+    const name=currentLang==='en'?d.nameEn:d.name;
+    const badges=spiceBadge(d.spice)+tagBadges(d.tags);
+    return `<div class="menu-card">${thumb}<div class="menu-card-body"><div class="menu-card-cat">${d.cat}</div><h3>${name}</h3><p>${d.desc}</p>${badges?`<div class="badges-row">${badges}</div>`:''}<div class="menu-card-footer"><span class="price">${d.price} сом</span><button class="add-btn" onclick="addToCart(${d.id},'main')">+</button></div></div></div>`;
+  }).join('');
+}
+function filterCat(cat){ activeCategory=cat; renderMenu(); }
+function searchMenu(){ renderMenu(); }
+
+// ===== BAR =====
+function renderBar(){
+  const tabs=document.getElementById('barCategoryTabs');
+  const grid=document.getElementById('barGrid');
+  if(!tabs||!grid) return;
+  const q=(document.getElementById('barSearch')||{}).value?.toLowerCase()||'';
+  const cats=['Все',...new Set(barItems.map(d=>d.cat))];
+  tabs.innerHTML=cats.map(c=>`<button class="cat-tab${c===activeBarCategory?' active':''}" onclick="filterBarCat('${c}')">${c}</button>`).join('');
+  let filtered=activeBarCategory==='Все'?barItems:barItems.filter(d=>d.cat===activeBarCategory);
+  if(q) filtered=filtered.filter(d=>d.name.toLowerCase().includes(q)||d.nameEn.toLowerCase().includes(q)||d.desc.toLowerCase().includes(q));
+  const noRes=document.getElementById('barNoResults');
+  if(noRes) noRes.classList.toggle('hidden', filtered.length>0);
+  grid.innerHTML=filtered.map(d=>{
+    const thumb=d.img?`<div class="menu-card-img"><img src="${d.img}" alt="${d.name}"></div>`:`<div class="menu-card-img">${d.emoji}</div>`;
+    const name=currentLang==='en'?d.nameEn:d.name;
+    return `<div class="menu-card">${thumb}<div class="menu-card-body"><div class="menu-card-cat">${d.cat}</div><h3>${name}</h3><p>${d.desc}</p><div class="menu-card-footer"><span class="price">${d.price} сом</span><button class="add-btn" onclick="addToCart(${d.id},'bar')">+</button></div></div></div>`;
+  }).join('');
+}
+function filterBarCat(cat){ activeBarCategory=cat; renderBar(); }
+function searchBar(){ renderBar(); }
+
+// ===== CART =====
+let cart=[];
+function addToCart(id, type){
+  const src = type==='bar' ? barItems : dishes;
+  const dish=src.find(d=>d.id===id);
+  if(!dish) return;
+  const ex=cart.find(i=>i.id===id&&i.type===type);
+  if(ex) ex.qty++;
+  else cart.push({id:dish.id,name:dish.name,nameEn:dish.nameEn,price:dish.price,emoji:dish.emoji,img:dish.img,qty:1,type});
+  updateCartCount();
+  showNotif(dish.emoji+' '+dish.name+' — '+t('added'));
+}
+function changeQty(id,type,delta){
+  const idx=cart.findIndex(i=>i.id===id&&i.type===type);
+  if(idx<0) return;
+  cart[idx].qty+=delta;
+  if(cart[idx].qty<=0) cart.splice(idx,1);
+  updateCartCount(); renderCart();
+}
+function removeItem(id,type){
+  cart=cart.filter(i=>!(i.id===id&&i.type===type));
+  updateCartCount(); renderCart();
+}
+function updateCartCount(){
+  const total=cart.reduce((s,i)=>s+i.qty,0);
+  const c=document.getElementById('cartCount'); const m=document.getElementById('mCartCount');
+  if(c) c.textContent=total;
+  if(m){m.textContent=total; m.classList.toggle('show',total>0);}
+}
+function renderCart(){
+  const container=document.getElementById('cartContainer');
+  if(!container) return;
+  if(!cart.length){
+    container.innerHTML=`<div class="cart-empty"><div class="icon">🛒</div><p>${t('cartEmpty')}</p><button class="btn-primary" onclick="showPage('menu')" style="margin-top:1rem">${t('goMenu')}</button></div>`;
+    return;
+  }
+  const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
+  container.innerHTML=cart.map(item=>{
+    const thumb=item.img?`<img class="cart-item-img" src="${item.img}" alt="">`:`<span class="cart-item-emoji">${item.emoji}</span>`;
+    const name=currentLang==='en'?item.nameEn:item.name;
+    return `<div class="cart-item">${thumb}<div class="cart-item-info"><h4>${name}</h4><p>${item.price} сом × ${item.qty}</p></div><div class="cart-qty"><button class="qty-btn" onclick="changeQty(${item.id},'${item.type}',-1)">−</button><span class="qty-num">${item.qty}</span><button class="qty-btn" onclick="changeQty(${item.id},'${item.type}',1)">+</button></div><span class="cart-item-price">${item.price*item.qty} сом</span><button class="remove-btn" onclick="removeItem(${item.id},'${item.type}')">🗑</button></div>`;
+  }).join('')+
+  `<div class="cart-total"><h3>${t('total')}</h3><span class="total-price">${total} сом</span></div>
+   <button class="show-waiter-btn" onclick="showWaiterModal()">${t('showWaiter')}</button>`;
+}
+function showWaiterModal(){
+  const listEl=document.getElementById('modalCartList');
+  const totalEl=document.getElementById('modalTotal');
+  const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
+  document.querySelector('#waiterModal h2').textContent=t('yourOrder');
+  document.querySelector('#waiterModal p').textContent=t('showToWaiter');
+  document.querySelector('#waiterModal .btn-primary').textContent=t('close');
+  listEl.innerHTML=cart.map(i=>{const name=currentLang==='en'?i.nameEn:i.name;return`<div class="modal-cart-item"><span>${i.emoji} ${name} × ${i.qty}</span><span>${i.price*i.qty} сом</span></div>`;}).join('');
+  totalEl.textContent=t('total')+' '+total+' сом';
+  document.getElementById('waiterModal').classList.remove('hidden');
+}
+function closeModal(e){
+  if(!e||e.target===document.getElementById('waiterModal')) document.getElementById('waiterModal').classList.add('hidden');
+}
+
+// ===== NAV =====
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const page=document.getElementById('page-'+name);
+  if(!page) return;
+  page.classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const nb=document.getElementById('nav-'+name); if(nb) nb.classList.add('active');
+  document.querySelectorAll('.mobile-nav-btn').forEach(b=>b.classList.remove('active'));
+  const mb=document.getElementById('mnav-'+name); if(mb) mb.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(name==='menu') renderMenu();
+  if(name==='bar') renderBar();
+  if(name==='cart') renderCart();
+  if(name==='reviews') renderReviews();
+  if(name==='admin'&&adminLoggedIn){renderAdminDishes();renderAdminBar();renderAdminBanquets();renderAdminReviews();}
+}
+
+// ===== LANG =====
+function cycleLang(){
+  currentLang=langs[(langs.indexOf(currentLang)+1)%langs.length];
+  document.getElementById('langLabel').textContent=langLabels[currentLang];
+  const hd=document.getElementById('heroDesc'); if(hd) hd.textContent=t('heroDesc');
+  if(document.getElementById('page-menu').classList.contains('active')) renderMenu();
+  if(document.getElementById('page-bar').classList.contains('active')) renderBar();
+  if(document.getElementById('page-cart').classList.contains('active')) renderCart();
+}
+
+// ===== BANQUET =====
+let banquetRequests=[
+  {id:1,name:'Айгерим Б.',phone:'+996700123456',date:'2025-05-10',time:'18:00',guests:20,type:'День рождения',wishes:'Торт без орехов',status:'new'},
+  {id:2,name:'ОсОО Алтын',phone:'+996555987654',date:'2025-05-15',time:'13:00',guests:15,type:'Корпоратив',wishes:'',status:'confirmed'},
+];
+function submitBanquet(){
+  const name=document.getElementById('bName').value.trim();
+  const phone=document.getElementById('bPhone').value.trim();
+  const date=document.getElementById('bDate').value;
+  const guests=document.getElementById('bGuests').value;
+  const time=document.getElementById('bTime').value;
+  const type=document.getElementById('bType').value;
+  const wishes=document.getElementById('bWishes').value.trim();
+  if(!name||!phone||!date||!guests){showNotif(t('fillRequired'));return;}
+  banquetRequests.push({id:nextBanquetId++,name,phone,date,time,guests,type,wishes,status:'new'});
+  const msg=`🌸 *Заявка на банкет — Han's Garden & Ria Cafe*\n\n👤 Имя: ${name}\n📞 Телефон: ${phone}\n📅 Дата: ${date}${time?' в '+time:''}\n👥 Гостей: ${guests}\n🎉 Тип: ${type}\n${wishes?`💬 Пожелания: ${wishes}`:''}`;
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`,'_blank');
+  document.getElementById('banquetFormCard').style.display='none';
+  document.getElementById('banquetSuccess').style.display='block';
+}
+function resetBanquet(){
+  ['bName','bPhone','bDate','bTime','bGuests','bWishes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('banquetFormCard').style.display='block';
+  document.getElementById('banquetSuccess').style.display='none';
+}
+
+// ===== ADMIN =====
+function doAdminLogin(){
+  if(document.getElementById('adminPass').value==='hans2025'){
+    adminLoggedIn=true;
+    document.getElementById('adminLogin').style.display='none';
+    document.getElementById('adminPanel').style.display='block';
+    renderAdminDishes(); renderAdminBar(); renderAdminBanquets(); renderAdminReviews();
+  } else { showNotif(t('wrongPass')); document.getElementById('adminPass').value=''; }
+}
+function doAdminLogout(){
+  adminLoggedIn=false;
+  document.getElementById('adminLogin').style.display='block';
+  document.getElementById('adminPanel').style.display='none';
+  document.getElementById('adminPass').value='';
+}
+function switchAdminTab(tab,btn){
+  document.querySelectorAll('.admin-tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.admin-section').forEach(s=>s.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  const s=document.getElementById('admin-'+tab); if(s) s.classList.add('active');
+  if(tab==='bar') renderAdminBar();
+  if(tab==='adminreviews') renderAdminReviews();
+}
+
+// -- Admin Dishes --
+function renderAdminDishes(){
+  const list=document.getElementById('adminDishesList'); if(!list) return;
+  list.innerHTML=dishes.map(d=>{
+    const thumb=d.img?`<img src="${d.img}" style="width:40px;height:40px;border-radius:8px;object-fit:cover;flex-shrink:0">`:`<span style="font-size:1.6rem">${d.emoji}</span>`;
+    return`<div class="admin-dish-item">${thumb}<div class="dish-info"><h4>${d.name}</h4><p>${d.cat} · ${d.price} сом &nbsp;${spiceLabels[d.spice]||''}</p></div><div class="admin-actions"><button class="edit-btn" onclick="editDish(${d.id})">✏️</button><button class="del-btn" onclick="deleteDish(${d.id})">🗑</button></div></div>`;
+  }).join('')||'<p style="color:#8a6060;font-size:.85rem">Блюд пока нет</p>';
+}
+function editDish(id){
+  const d=dishes.find(x=>x.id===id); if(!d) return;
+  document.getElementById('editDishId').value=id;
+  document.getElementById('editDishType').value='main';
+  document.getElementById('dName').value=d.name;
+  document.getElementById('dNameEn').value=d.nameEn;
+  document.getElementById('dCat').value=d.cat;
+  document.getElementById('dPrice').value=d.price;
+  document.getElementById('dDesc').value=d.desc;
+  document.getElementById('dEmoji').value=d.emoji;
+  document.getElementById('dSpice').value=d.spice||'';
+  document.getElementById('dTags').value=d.tags||'';
+  const dUrlF=document.getElementById('dImgUrl');
+  const prev=document.getElementById('dImgPreview');
+  if(d.img){dUrlF.value=d.img;prev.src=d.img;prev.style.display='block';}else{dUrlF.value='';prev.style.display='none';}
+  document.getElementById('dishFormTitle').textContent='✏️ Редактировать блюдо';
+  document.getElementById('dishForm').scrollIntoView({behavior:'smooth'});
+  switchAdminTab('dishes',document.querySelector('.admin-tab-btn'));
+}
+function cancelEdit(){
+  ['editDishId','dName','dNameEn','dPrice','dDesc','dEmoji','dTags'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('dSpice').value='';
+  document.getElementById('dImgUrl').value='';
+  document.getElementById('dImgPreview').style.display='none';
+  document.getElementById('dishFormTitle').textContent='➕ Добавить блюдо';
+}
+function saveDish(){
+  const editId=document.getElementById('editDishId').value;
+  const name=document.getElementById('dName').value.trim();
+  const nameEn=document.getElementById('dNameEn').value.trim()||name;
+  const cat=document.getElementById('dCat').value;
+  const price=parseInt(document.getElementById('dPrice').value);
+  const desc=document.getElementById('dDesc').value.trim();
+  const emoji=document.getElementById('dEmoji').value.trim()||'🍽️';
+  const spice=document.getElementById('dSpice').value;
+  const tags=document.getElementById('dTags').value.trim();
+  const img=document.getElementById('dImgUrl').value.trim();
+  if(!name||!price){showNotif(t('fillRequired'));return;}
+  if(editId){
+    const idx=dishes.findIndex(d=>d.id===parseInt(editId));
+    if(idx>=0) dishes[idx]={id:parseInt(editId),name,nameEn,cat,price,desc,emoji,img,spice,tags};
+  } else {
+    dishes.push({id:nextDishId++,name,nameEn,cat,price,desc,emoji,img,spice,tags});
+  }
+  saveToStorage(); showNotif('✅ '+t('saved')); cancelEdit(); renderAdminDishes();
+}
+function deleteDish(id){
+  if(!confirm('Удалить это блюдо?')) return;
+  dishes=dishes.filter(d=>d.id!==id); cart=cart.filter(i=>!(i.id===id&&i.type==='main'));
+  updateCartCount(); saveToStorage(); renderAdminDishes(); showNotif('🗑 '+t('removed'));
+}
+function previewImgUrl(){
+  const url=document.getElementById('dImgUrl').value.trim();
+  const prev=document.getElementById('dImgPreview');
+  if(url){prev.src=url;prev.style.display='block';}else prev.style.display='none';
+}
+
+// -- Admin Bar --
+function renderAdminBar(){
+  const list=document.getElementById('adminBarList'); if(!list) return;
+  list.innerHTML=barItems.map(d=>{
+    const thumb=d.img?`<img src="${d.img}" style="width:40px;height:40px;border-radius:8px;object-fit:cover;flex-shrink:0">`:`<span style="font-size:1.6rem">${d.emoji}</span>`;
+    return`<div class="admin-dish-item">${thumb}<div class="dish-info"><h4>${d.name}</h4><p>${d.cat} · ${d.price} сом</p></div><div class="admin-actions"><button class="edit-btn" onclick="editBarItem(${d.id})">✏️</button><button class="del-btn" onclick="deleteBarItem(${d.id})">🗑</button></div></div>`;
+  }).join('')||'<p style="color:#8a6060;font-size:.85rem">Позиций пока нет</p>';
+}
+function editBarItem(id){
+  const d=barItems.find(x=>x.id===id); if(!d) return;
+  document.getElementById('editBarId').value=id;
+  document.getElementById('bdrName').value=d.name;
+  document.getElementById('bdrNameEn').value=d.nameEn;
+  document.getElementById('bdrCat').value=d.cat;
+  document.getElementById('bdrPrice').value=d.price;
+  document.getElementById('bdrDesc').value=d.desc;
+  document.getElementById('bdrEmoji').value=d.emoji;
+  const bUrlF=document.getElementById('bdrImgUrl');
+  const prev=document.getElementById('bdrImgPreview');
+  if(d.img){bUrlF.value=d.img;prev.src=d.img;prev.style.display='block';}else{bUrlF.value='';prev.style.display='none';}
+  document.getElementById('barFormTitle').textContent='✏️ Редактировать позицию';
+  document.querySelector('#admin-bar .add-dish-form').scrollIntoView({behavior:'smooth'});
+}
+function cancelBarEdit(){
+  ['editBarId','bdrName','bdrNameEn','bdrPrice','bdrDesc','bdrEmoji'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('bdrImgUrl').value='';
+  document.getElementById('bdrImgPreview').style.display='none';
+  document.getElementById('barFormTitle').textContent='➕ Добавить позицию в бар';
+}
+function saveBarItem(){
+  const editId=document.getElementById('editBarId').value;
+  const name=document.getElementById('bdrName').value.trim();
+  const nameEn=document.getElementById('bdrNameEn').value.trim()||name;
+  const cat=document.getElementById('bdrCat').value;
+  const price=parseInt(document.getElementById('bdrPrice').value);
+  const desc=document.getElementById('bdrDesc').value.trim();
+  const emoji=document.getElementById('bdrEmoji').value.trim()||'🍹';
+  const img=document.getElementById('bdrImgUrl').value.trim();
+  if(!name||!price){showNotif(t('fillRequired'));return;}
+  if(editId){
+    const idx=barItems.findIndex(d=>d.id===parseInt(editId));
+    if(idx>=0) barItems[idx]={id:parseInt(editId),name,nameEn,cat,price,desc,emoji,img};
+  } else {
+    barItems.push({id:nextBarId++,name,nameEn,cat,price,desc,emoji,img});
+  }
+  saveToStorage(); showNotif('✅ '+t('saved')); cancelBarEdit(); renderAdminBar();
+}
+function deleteBarItem(id){
+  if(!confirm('Удалить эту позицию?')) return;
+  barItems=barItems.filter(d=>d.id!==id); cart=cart.filter(i=>!(i.id===id&&i.type==='bar'));
+  updateCartCount(); saveToStorage(); renderAdminBar(); showNotif('🗑 '+t('removed'));
+}
+function previewBarImgUrl(){
+  const url=document.getElementById('bdrImgUrl').value.trim();
+  const prev=document.getElementById('bdrImgPreview');
+  if(url){prev.src=url;prev.style.display='block';}else prev.style.display='none';
+}
+
+// -- Admin Banquets --
+function renderAdminBanquets(){
+  const list=document.getElementById('adminBanquetsList'); if(!list) return;
+  if(!banquetRequests.length){list.innerHTML=`<p style="color:#8a6060;font-size:.85rem">${t('noRequests')}</p>`;return;}
+  list.innerHTML=banquetRequests.map(r=>`
+    <div class="banquet-req">
+      <div class="req-header"><h4>${r.name}</h4><span class="status-badge ${r.status}">${r.status==='new'?'🆕 Новая':'✅ Подтверждена'}</span></div>
+      <p>📞 ${r.phone} · 📅 ${r.date}${r.time?' '+r.time:''} · 👥 ${r.guests} чел. · 🎉 ${r.type}</p>
+      ${r.wishes?`<p>💬 ${r.wishes}</p>`:''}
+      <div style="display:flex;gap:.5rem;margin-top:.5rem;flex-wrap:wrap">
+        ${r.status==='new'?`<button class="confirm-btn" onclick="confirmBanquet(${r.id})">✅ Подтвердить</button>`:''}
+        <button class="confirm-btn" style="background:#5b9ed6" onclick="replyWA('${r.phone}','${r.name}')">💬 WhatsApp</button>
+      </div>
+    </div>`).join('');
+}
+function replyWA(phone,name){
+  const clean=phone.replace(/\D/g,'');
+  window.open(`https://wa.me/${clean}?text=${encodeURIComponent(`Здравствуйте, ${name}! Han's Garden 🌸 По вашей заявке на банкет:`)}`, '_blank');
+}
+function confirmBanquet(id){
+  const r=banquetRequests.find(r=>r.id===id);
+  if(r){r.status='confirmed';renderAdminBanquets();showNotif(t('confirmed'));}
+}
+
+// -- Admin Reviews --
+function renderAdminReviews(){
+  const list=document.getElementById('adminReviewsList'); if(!list) return;
+  if(!reviews.length){list.innerHTML='<p style="color:#8a6060;font-size:.85rem">Отзывов пока нет</p>';return;}
+  list.innerHTML=reviews.map(r=>{
+    const stars='★'.repeat(r.rating)+'☆'.repeat(5-r.rating);
+    return`<div class="admin-review-item">
+      <div class="rev-header">
+        <h4>${r.name}${r.phone?` · ${r.phone}`:''}</h4>
+        <div style="display:flex;gap:.4rem;align-items:center">
+          <span class="rev-stars">${stars}</span>
+          <button class="del-review-btn" onclick="deleteReview(${r.id})">🗑</button>
+        </div>
+      </div>
+      ${r.tags.length?`<p style="font-size:.72rem;color:#8a6060;margin-bottom:.3rem">${r.tags.join(' · ')}</p>`:''}
+      <p>${r.text}</p>
+      <p style="font-size:.72rem;color:#aaa;margin-top:.3rem">${r.date}</p>
+    </div>`;
+  }).join('');
+}
+function deleteReview(id){
+  if(!confirm('Удалить отзыв?')) return;
+  reviews=reviews.filter(r=>r.id!==id);
+  saveToStorage(); renderAdminReviews(); renderReviews(); showNotif('🗑 Отзыв удалён');
+}
+
+// ===== NOTIFICATION =====
+let notifTimer=null;
+function showNotif(msg){
+  const n=document.getElementById('notif'); n.textContent=msg; n.classList.add('show');
+  clearTimeout(notifTimer); notifTimer=setTimeout(()=>n.classList.remove('show'),2200);
+}
+
+// ===== SAKURA =====
+function createPetals(){
+  const bg=document.getElementById('sakuraBg'); if(!bg) return;
+  for(let i=0;i<15;i++){
+    const p=document.createElement('div'); p.className='petal';
+    const s=8+Math.random()*10;
+    p.style.cssText=`left:${Math.random()*100}%;width:${s}px;height:${s}px;animation-duration:${7+Math.random()*9}s;animation-delay:${Math.random()*12}s;`;
+    bg.appendChild(p);
+  }
+}
+
+// ===== HASH ADMIN =====
+function checkHash(){ if(window.location.hash==='#admin-secret-2025') showPage('admin'); }
+window.addEventListener('hashchange',checkHash);
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded',()=>{
+  loadFromStorage();
+  createPetals();
+  renderMenu();
+  checkHash();
+});
+
+</script>
+</body>
+</html>
