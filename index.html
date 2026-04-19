@@ -726,6 +726,7 @@ footer p{font-size:.8rem;opacity:.75;line-height:1.7}
 <script>
 'use strict';
 
+const MENU_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzqHJXaQCci0HAJm_9h9f3JcnCNvZ5m-i5P3DVRctTqatLJELFvxet5HScTwWiWraXGBQ/exec';
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyMqmZNvIyBq6nc_JGin-hzFYC8FkaPlReN_n5w1f067P1nqu7dGHGb7CzRSsCTiyaX0w/exec';
 const WHATSAPP_NUMBER = '996558171942';
 
@@ -814,13 +815,67 @@ function saveToStorage(){
 }
 function loadFromStorage(){
   try{
-    const d = localStorage.getItem('hg_dishes');
-    if(d){ const p=JSON.parse(d); if(Array.isArray(p)&&p.length){ dishes=p.map(x=>({spice:'',tags:'',...x})); nextDishId=parseInt(localStorage.getItem('hg_nextDishId')||'20'); }}
-    const b = localStorage.getItem('hg_bar');
-    if(b){ const p=JSON.parse(b); if(Array.isArray(p)&&p.length){ barItems=p; nextBarId=parseInt(localStorage.getItem('hg_nextBarId')||'200'); }}
     const r = localStorage.getItem('hg_reviews');
     if(r){ const p=JSON.parse(r); if(Array.isArray(p)){ reviews=p; nextReviewId=Math.max(10,...p.map(x=>x.id+1)); }}
   }catch(e){}
+}
+
+function loadMenuFromSheets(){
+  // Load main menu
+  fetch(MENU_SCRIPT_URL + '?sheet=Sheet1&t=' + Date.now())
+    .then(r => r.json())
+    .then(data => {
+      if(Array.isArray(data) && data.length > 0){
+        dishes = data.map(d => ({
+          id: parseInt(d.id) || Math.random(),
+          name: d.name || '',
+          nameEn: d.name || '',
+          cat: d.cat || 'Прочее',
+          price: parseInt(d.price) || 0,
+          desc: d.desc || '',
+          spice: d.spice || '',
+          tags: d.tags || '',
+          img: d.img || ''
+        }));
+        nextDishId = Math.max(20, ...dishes.map(d=>parseInt(d.id)||0)) + 1;
+        if(document.getElementById('page-menu').classList.contains('active')) renderMenu();
+        if(document.getElementById('adminDishesList')) renderAdminDishes();
+      }
+    })
+    .catch(()=>{
+      // fallback to localStorage
+      try{
+        const d = localStorage.getItem('hg_dishes');
+        if(d){ const p=JSON.parse(d); if(Array.isArray(p)&&p.length){ dishes=p.map(x=>({spice:'',tags:'',...x})); nextDishId=parseInt(localStorage.getItem('hg_nextDishId')||'20'); }}
+      }catch(e){}
+    });
+
+  // Load bar menu
+  fetch(MENU_SCRIPT_URL + '?sheet=Bar&t=' + Date.now())
+    .then(r => r.json())
+    .then(data => {
+      if(Array.isArray(data) && data.length > 0){
+        barItems = data.map(d => ({
+          id: parseInt(d.id) || Math.random(),
+          name: d.name || '',
+          nameEn: d.name || '',
+          cat: d.cat || 'Напитки',
+          price: parseInt(d.price) || 0,
+          desc: d.desc || '',
+          img: d.img || '',
+          emoji: d.emoji || '🍹'
+        }));
+        nextBarId = Math.max(200, ...barItems.map(d=>parseInt(d.id)||0)) + 1;
+        if(document.getElementById('page-bar').classList.contains('active')) renderBar();
+        if(document.getElementById('adminBarList')) renderAdminBar();
+      }
+    })
+    .catch(()=>{
+      try{
+        const b = localStorage.getItem('hg_bar');
+        if(b){ const p=JSON.parse(b); if(Array.isArray(p)&&p.length){ barItems=p; nextBarId=parseInt(localStorage.getItem('hg_nextBarId')||'200'); }}
+      }catch(e){}
+    });
 }
 
 // ===== REVIEWS =====
@@ -1185,12 +1240,25 @@ function saveDish(){
   } else {
     dishes.push({id:nextDishId++,name,nameEn,cat,price,desc,emoji,img,spice,tags});
   }
-  saveToStorage(); showNotif('✅ '+t('saved')); cancelEdit(); renderAdminDishes();
+  saveToStorage();
+  // Save all dishes to Google Sheets
+  fetch(MENU_SCRIPT_URL, {
+    method:'POST', mode:'no-cors',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({action:'save', sheet:'Sheet1', items: dishes})
+  }).catch(()=>{});
+  showNotif('✅ '+t('saved')); cancelEdit(); renderAdminDishes();
 }
 function deleteDish(id){
   if(!confirm('Удалить это блюдо?')) return;
   dishes=dishes.filter(d=>d.id!==id); cart=cart.filter(i=>!(i.id===id&&i.type==='main'));
-  updateCartCount(); saveToStorage(); renderAdminDishes(); showNotif('🗑 '+t('removed'));
+  updateCartCount(); saveToStorage();
+  fetch(MENU_SCRIPT_URL, {
+    method:'POST', mode:'no-cors',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({action:'save', sheet:'Sheet1', items: dishes})
+  }).catch(()=>{});
+  renderAdminDishes(); showNotif('🗑 '+t('removed'));
 }
 function previewImgUrl(){
   const url=document.getElementById('dImgUrl').value.trim();
@@ -1243,12 +1311,25 @@ function saveBarItem(){
   } else {
     barItems.push({id:nextBarId++,name,nameEn,cat,price,desc,emoji,img});
   }
-  saveToStorage(); showNotif('✅ '+t('saved')); cancelBarEdit(); renderAdminBar();
+  saveToStorage();
+  // Save all bar items to Google Sheets
+  fetch(MENU_SCRIPT_URL, {
+    method:'POST', mode:'no-cors',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({action:'save', sheet:'Bar', items: barItems})
+  }).catch(()=>{});
+  showNotif('✅ '+t('saved')); cancelBarEdit(); renderAdminBar();
 }
 function deleteBarItem(id){
   if(!confirm('Удалить эту позицию?')) return;
   barItems=barItems.filter(d=>d.id!==id); cart=cart.filter(i=>!(i.id===id&&i.type==='bar'));
-  updateCartCount(); saveToStorage(); renderAdminBar(); showNotif('🗑 '+t('removed'));
+  updateCartCount(); saveToStorage();
+  fetch(MENU_SCRIPT_URL, {
+    method:'POST', mode:'no-cors',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({action:'save', sheet:'Bar', items: barItems})
+  }).catch(()=>{});
+  renderAdminBar(); showNotif('🗑 '+t('removed'));
 }
 function previewBarImgUrl(){
   const url=document.getElementById('bdrImgUrl').value.trim();
@@ -1332,6 +1413,7 @@ window.addEventListener('hashchange',checkHash);
 document.addEventListener('DOMContentLoaded',()=>{
   loadFromStorage();
   createPetals();
+  loadMenuFromSheets();
   renderMenu();
   checkHash();
 });
