@@ -479,7 +479,7 @@ footer p{font-size:.8rem;opacity:.75;line-height:1.7}
       <h3>Оставить заявку</h3>
       <div class="form-row">
         <div class="form-group"><label>Ваше имя *</label><input type="text" id="bName" placeholder="Айгерим"></div>
-        <div class="form-group"><label>Телефон *</label><input type="tel" id="bPhone" placeholder="+996 xxx xxx xxx"></div>
+        <div class="form-group"><label>Телефон *</label><div style="display:flex;align-items:center;gap:.4rem"><span style="background:var(--blush);border:1.5px solid var(--blush);border-radius:10px;padding:.65rem .7rem;font-size:.88rem;color:var(--bark);white-space:nowrap">+996</span><input type="tel" id="bPhone" placeholder="700 123 456" style="flex:1"></div></div>
       </div>
       <div class="form-row">
         <div class="form-group"><label>Дата *</label><input type="date" id="bDate"></div>
@@ -488,10 +488,14 @@ footer p{font-size:.8rem;opacity:.75;line-height:1.7}
       <div class="form-row">
         <div class="form-group"><label>Кол-во гостей *</label><input type="number" id="bGuests" placeholder="10" min="2" max="30"></div>
         <div class="form-group"><label>Тип мероприятия</label>
-          <select id="bType">
-            <option>День рождения</option><option>Корпоратив</option><option>Свадьба</option><option>Другое</option>
+          <select id="bType" onchange="toggleOtherType()">
+            <option>День рождения</option><option>Корпоратив</option><option>Другое</option>
           </select>
         </div>
+      </div>
+      <div class="form-group" id="otherTypeGroup" style="display:none">
+        <label>Укажите тип мероприятия</label>
+        <input type="text" id="bTypeOther" placeholder="Напишите свой вариант...">
       </div>
       <div class="form-group"><label>Пожелания</label><textarea id="bWishes" placeholder="Особые пожелания, аллергии..."></textarea></div>
       <button class="submit-btn" onclick="submitBanquet()">🌸 Отправить заявку</button>
@@ -719,7 +723,7 @@ footer p{font-size:.8rem;opacity:.75;line-height:1.7}
     <a href="https://instagram.com/hans_ria_cafe" target="_blank">📸 Instagram</a>
     <a href="https://wa.me/996558171942" target="_blank">💬 WhatsApp</a>
   </div>
-  <p style="font-size:0.75rem;opacity:0.5;margin-top:0.6rem">© 2025 Han's Garden & Ria Cafe</p>
+  <p style="font-size:0.75rem;opacity:0.5;margin-top:0.6rem">© 2026 Han's Garden & Ria Cafe</p>
   <p style="margin-top:0.8rem"><a href="#" onclick="showPage('admin');return false;" style="color:rgba(255,255,255,0.12);font-size:0.6rem;text-decoration:none">⚙</a></p>
 </footer>
 
@@ -1143,17 +1147,22 @@ let banquetRequests=[
   {id:1,name:'Айгерим Б.',phone:'+996700123456',date:'2025-05-10',time:'18:00',guests:20,type:'День рождения',wishes:'Торт без орехов',status:'new'},
   {id:2,name:'ОсОО Алтын',phone:'+996555987654',date:'2025-05-15',time:'13:00',guests:15,type:'Корпоратив',wishes:'',status:'confirmed'},
 ];
+function toggleOtherType(){
+  const val = document.getElementById('bType').value;
+  document.getElementById('otherTypeGroup').style.display = val === 'Другое' ? 'block' : 'none';
+}
 function submitBanquet(){
   const name=document.getElementById('bName').value.trim();
-  const phone=document.getElementById('bPhone').value.trim();
+  const phone='+996 ' + document.getElementById('bPhone').value.trim();
   const date=document.getElementById('bDate').value;
   const guests=document.getElementById('bGuests').value;
   const time=document.getElementById('bTime').value;
-  const type=document.getElementById('bType').value;
+  const bTypeVal=document.getElementById('bType').value;
+  const type=bTypeVal==='Другое' ? (document.getElementById('bTypeOther').value.trim()||'Другое') : bTypeVal;
   const wishes=document.getElementById('bWishes').value.trim();
   if(!name||!phone||!date||!guests){showNotif(t('fillRequired'));return;}
   banquetRequests.push({id:nextBanquetId++,name,phone,date,time,guests,type,wishes,status:'new'});
-  const msg=`🌸 *Заявка на банкет — Han's Garden & Ria Cafe*\n\n👤 Имя: ${name}\n📞 Телефон: ${phone}\n📅 Дата: ${date}${time?' в '+time:''}\n👥 Гостей: ${guests}\n🎉 Тип: ${type}\n${wishes?`💬 Пожелания: ${wishes}`:''}`;
+  const msg=`🌸 *Заявка на бронь — Han's Garden & Ria Cafe*\n\n👤 Имя: ${name}\n📞 Телефон: ${phone}\n📅 Дата: ${date}${time?' в '+time:''}\n👥 Гостей: ${guests}\n🎉 Тип: ${type}\n${wishes?`💬 Пожелания: ${wishes}`:''}`;
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`,'_blank');
   document.getElementById('banquetFormCard').style.display='none';
   document.getElementById('banquetSuccess').style.display='block';
