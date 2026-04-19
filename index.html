@@ -37,8 +37,8 @@
   --mobile-nav-h: 60px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html{scroll-behavior:smooth}
-body{font-family:'Noto Sans KR',Arial,sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;overflow-x:hidden;padding-bottom:var(--mobile-nav-h)}
+html{scroll-behavior:smooth;overscroll-behavior:none;height:100%}
+body{font-family:'Noto Sans KR',Arial,sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;overflow-x:hidden;padding-bottom:var(--mobile-nav-h);overscroll-behavior-y:none}
 
 /* SAKURA */
 .sakura-bg{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
@@ -68,7 +68,7 @@ header{position:sticky;top:0;z-index:200;background:rgba(253,246,240,.96);backdr
 .cart-count{background:#fff;color:var(--deep-rose);border-radius:50%;width:18px;height:18px;font-size:.68rem;font-weight:700;display:flex;align-items:center;justify-content:center}
 
 /* MOBILE NAV */
-.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;height:var(--mobile-nav-h);background:rgba(253,246,240,.97);backdrop-filter:blur(16px);border-top:1px solid var(--sakura);box-shadow:0 -2px 16px var(--shadow);justify-content:space-around;align-items:center}
+.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;height:var(--mobile-nav-h);background:rgba(253,246,240,.97);backdrop-filter:blur(16px);border-top:1px solid var(--sakura);box-shadow:0 -2px 16px var(--shadow);justify-content:space-around;align-items:center;padding-bottom:env(safe-area-inset-bottom,0)}
 .mobile-nav-btn{background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;padding:.3rem .5rem;font-size:1.2rem;color:var(--bark);font-family:'Noto Sans KR',Arial,sans-serif;min-width:50px;border-radius:12px;transition:background .15s;position:relative}
 .mobile-nav-btn span{font-size:.6rem;line-height:1}
 .mobile-nav-btn.active,.mobile-nav-btn:hover{background:var(--blush)}
@@ -76,7 +76,7 @@ header{position:sticky;top:0;z-index:200;background:rgba(253,246,240,.96);backdr
 .m-badge.show{display:flex}
 
 /* PAGES */
-.page{display:none}
+.page{display:none;min-height:0}
 .page.active{display:block;animation:fadeIn .3s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
