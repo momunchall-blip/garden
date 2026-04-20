@@ -144,6 +144,9 @@ header{position:sticky;top:0;z-index:200;background:rgba(253,246,240,.96);backdr
 
 /* BADGES */
 .badges-row{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.4rem}
+.portion-row{display:flex;gap:.4rem;margin-top:.5rem}
+.portion-btn{background:#fff;border:1.5px solid var(--blush);border-radius:20px;padding:.25rem .7rem;font-size:.75rem;cursor:pointer;color:var(--bark);font-family:'Noto Sans KR',Arial,sans-serif;transition:all .2s}
+.portion-btn.active{background:var(--deep-rose);color:#fff;border-color:var(--deep-rose)}
 .badge{display:inline-flex;align-items:center;border-radius:20px;padding:.18rem .55rem;font-size:.68rem;font-weight:500;line-height:1.2}
 .badge-spice{background:#fff3e0;color:#a05000;border:1px solid #ffd9a0}
 .badge-hit{background:#ffe0e8;color:#b03060;border:1px solid #ffb5c8}
@@ -318,16 +321,29 @@ footer p{font-size:.8rem;opacity:.75;line-height:1.7}
   .cart-label{display:none}
   .mobile-nav{display:flex}
   .notif{bottom:calc(var(--mobile-nav-h) + .8rem)}
-  .menu-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.9rem;padding:1rem .8rem}
-  .menu-card-img{height:130px;font-size:2.4rem}
-  .menu-card-body{padding:.8rem}
+  .menu-grid{grid-template-columns:1fr 1fr;gap:.7rem;padding:.8rem}
+  .menu-card-img{height:120px;font-size:2.2rem}
+  .menu-card-body{padding:.7rem}
+  .menu-card h3{font-size:.85rem}
+  .menu-card p{font-size:.72rem}
+  .price{font-size:1rem}
+  .add-btn{width:28px;height:28px;font-size:1rem}
   .form-row{grid-template-columns:1fr}
-  .hero{min-height:360px}
-  .hero-deco{font-size:6rem}
+  .hero{min-height:320px}
+  .hero-deco{font-size:5rem}
   .features{grid-template-columns:1fr 1fr}
-  .page-header{padding:2rem 1rem 1.4rem}
-  .page-header h2{font-size:1.7rem}
+  .page-header{padding:1.5rem 1rem 1.2rem}
+  .page-header h2{font-size:1.5rem}
   footer{margin-bottom:0}
+  .cart-item{gap:.5rem}
+  .cart-item-emoji{font-size:1.4rem}
+  .banquet-container{padding:1rem .8rem}
+  .reviews-container{padding:1rem .8rem}
+  .about-grid{grid-template-columns:1fr 1fr;gap:.8rem;padding:1.2rem .8rem}
+  .about-card{padding:1rem}
+  .form-card{padding:1.2rem}
+  .category-tabs{padding:.6rem .8rem}
+  .cat-tab{padding:.35rem .7rem;font-size:.75rem}
 }
 @media(max-width:400px){
   .menu-grid{grid-template-columns:1fr 1fr}
@@ -351,7 +367,6 @@ footer p{font-size:.8rem;opacity:.75;line-height:1.7}
   <nav id="mainNav">
     <button onclick="showPage('home')" class="nav-btn active" id="nav-home">Главная</button>
     <button onclick="showPage('menu')" class="nav-btn" id="nav-menu">Меню</button>
-    <button onclick="showPage('bar')" class="nav-btn" id="nav-bar">Бар</button>
     <button onclick="showPage('banquet')" class="nav-btn" id="nav-banquet">Банкет</button>
     <button onclick="showPage('reviews')" class="nav-btn" id="nav-reviews">Отзывы</button>
     <button onclick="showPage('about')" class="nav-btn" id="nav-about">О нас</button>
@@ -629,6 +644,16 @@ footer p{font-size:.8rem;opacity:.75;line-height:1.7}
             </select>
           </div>
           <div class="form-group"><label>Цена (сом)</label><input type="number" id="dPrice" placeholder="450"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Порция 0.7 — цена (сом) <span style="font-size:.7rem;color:#aaa">необязательно</span></label>
+            <input type="number" id="dPrice07" placeholder="320">
+          </div>
+          <div class="form-group">
+            <label style="visibility:hidden">пусто</label>
+            <div style="font-size:.75rem;color:#8a6060;padding-top:.5rem">Если указать — на карточке появится выбор порции</div>
+        </div>
         </div>
         <div class="form-row">
           <div class="form-group"><label>Описание</label><input type="text" id="dDesc" placeholder="Холодная лапша с овощами..."></div>
@@ -1027,7 +1052,12 @@ function renderMenu(){
     const thumb=d.img?`<div class="menu-card-img"><img src="${d.img}" alt="${d.name}"></div>`:`<div class="menu-card-img">${d.emoji}</div>`;
     const name=currentLang==='en'?d.nameEn:d.name;
     const badges=spiceBadge(d.spice)+tagBadges(d.tags);
-    return `<div class="menu-card">${thumb}<div class="menu-card-body"><div class="menu-card-cat">${d.cat}</div><h3>${name}</h3><p>${d.desc}</p>${badges?`<div class="badges-row">${badges}</div>`:''}<div class="menu-card-footer"><span class="price">${d.price} сом</span><button class="add-btn" onclick="addToCart(${d.id},'main')">+</button></div></div></div>`;
+    const portionHtml = d.price07 ? `
+      <div class="portion-row">
+        <button class="portion-btn active" id="pb1_${d.id}" onclick="selectPortion(${d.id},1)">Полная</button>
+        <button class="portion-btn" id="pb07_${d.id}" onclick="selectPortion(${d.id},0.7)">0.7</button>
+      </div>` : '';
+    return `<div class="menu-card">${thumb}<div class="menu-card-body"><div class="menu-card-cat">${d.cat}</div><h3>${name}</h3><p>${d.desc}</p>${badges?`<div class="badges-row">${badges}</div>`:''}<div class="menu-card-footer"><span class="price" id="price_${d.id}">${d.price} сом</span><button class="add-btn" onclick="addToCartPortion(${d.id})">+</button></div>${portionHtml}</div></div>`;
   }).join('');
 }
 function filterCat(cat){ activeCategory=cat; renderMenu(); }
@@ -1056,6 +1086,36 @@ function searchBar(){ renderBar(); }
 
 // ===== CART =====
 let cart=[];
+// Track selected portions per dish
+const selectedPortions = {};
+
+function selectPortion(id, portion){
+  selectedPortions[id] = portion;
+  const d = dishes.find(x=>x.id===id);
+  if(!d) return;
+  const price = portion === 0.7 ? d.price07 : d.price;
+  const priceEl = document.getElementById('price_'+id);
+  if(priceEl) priceEl.textContent = price + ' сом';
+  const btn1 = document.getElementById('pb1_'+id);
+  const btn07 = document.getElementById('pb07_'+id);
+  if(btn1) btn1.classList.toggle('active', portion===1);
+  if(btn07) btn07.classList.toggle('active', portion===0.7);
+}
+
+function addToCartPortion(id){
+  const portion = selectedPortions[id] || 1;
+  const d = dishes.find(x=>x.id===id);
+  if(!d) return;
+  const price = (portion===0.7 && d.price07) ? d.price07 : d.price;
+  const portionLabel = (portion===0.7 && d.price07) ? ' (0.7)' : '';
+  const cartId = id + '_' + portion;
+  const existing = cart.find(i=>i.cartId===cartId);
+  if(existing) existing.qty++;
+  else cart.push({cartId, id:id, name:d.name+portionLabel, nameEn:d.nameEn+portionLabel, price, emoji:d.emoji, img:d.img, qty:1, type:'main'});
+  updateCartCount();
+  showNotif(d.emoji+' '+d.name+portionLabel+' — '+t('added'));
+}
+
 function addToCart(id, type){
   const src = type==='bar' ? barItems : dishes;
   const dish=src.find(d=>d.id===id);
@@ -1066,15 +1126,15 @@ function addToCart(id, type){
   updateCartCount();
   showNotif(dish.emoji+' '+dish.name+' — '+t('added'));
 }
-function changeQty(id,type,delta){
-  const idx=cart.findIndex(i=>i.id===id&&i.type===type);
+function changeQty(id,type,delta,cartId){
+  const idx=cartId ? cart.findIndex(i=>i.cartId===cartId) : cart.findIndex(i=>i.id===id&&i.type===type);
   if(idx<0) return;
   cart[idx].qty+=delta;
   if(cart[idx].qty<=0) cart.splice(idx,1);
   updateCartCount(); renderCart();
 }
-function removeItem(id,type){
-  cart=cart.filter(i=>!(i.id===id&&i.type===type));
+function removeItem(id,type,cartId){
+  cart=cartId ? cart.filter(i=>i.cartId!==cartId) : cart.filter(i=>!(i.id===id&&i.type===type));
   updateCartCount(); renderCart();
 }
 function updateCartCount(){
@@ -1094,7 +1154,7 @@ function renderCart(){
   container.innerHTML=cart.map(item=>{
     const thumb=item.img?`<img class="cart-item-img" src="${item.img}" alt="">`:`<span class="cart-item-emoji">${item.emoji}</span>`;
     const name=currentLang==='en'?item.nameEn:item.name;
-    return `<div class="cart-item">${thumb}<div class="cart-item-info"><h4>${name}</h4><p>${item.price} сом × ${item.qty}</p></div><div class="cart-qty"><button class="qty-btn" onclick="changeQty(${item.id},'${item.type}',-1)">−</button><span class="qty-num">${item.qty}</span><button class="qty-btn" onclick="changeQty(${item.id},'${item.type}',1)">+</button></div><span class="cart-item-price">${item.price*item.qty} сом</span><button class="remove-btn" onclick="removeItem(${item.id},'${item.type}')">🗑</button></div>`;
+    const cid = item.cartId||''; return `<div class="cart-item">${thumb}<div class="cart-item-info"><h4>${name}</h4><p>${item.price} сом × ${item.qty}</p></div><div class="cart-qty"><button class="qty-btn" onclick="changeQty(${item.id},'${item.type}',-1,'${cid}')">−</button><span class="qty-num">${item.qty}</span><button class="qty-btn" onclick="changeQty(${item.id},'${item.type}',1,'${cid}')">+</button></div><span class="cart-item-price">${item.price*item.qty} сом</span><button class="remove-btn" onclick="removeItem(${item.id},'${item.type}','${cid}')">🗑</button></div>`;
   }).join('')+
   `<div class="cart-total"><h3>${t('total')}</h3><span class="total-price">${total} сом</span></div>
    <button class="show-waiter-btn" onclick="showWaiterModal()">${t('showWaiter')}</button>`;
@@ -1217,6 +1277,7 @@ function editDish(id){
   document.getElementById('dEmoji').value=d.emoji;
   document.getElementById('dSpice').value=d.spice||'';
   document.getElementById('dTags').value=d.tags||'';
+  document.getElementById('dPrice07').value=d.price07||'';
   const dUrlF=document.getElementById('dImgUrl');
   const prev=document.getElementById('dImgPreview');
   if(d.img){dUrlF.value=d.img;prev.src=d.img;prev.style.display='block';}else{dUrlF.value='';prev.style.display='none';}
@@ -1227,6 +1288,7 @@ function editDish(id){
 function cancelEdit(){
   ['editDishId','dName','dNameEn','dPrice','dDesc','dEmoji','dTags'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('dSpice').value='';
+  document.getElementById('dPrice07').value='';
   document.getElementById('dImgUrl').value='';
   document.getElementById('dImgPreview').style.display='none';
   document.getElementById('dishFormTitle').textContent='➕ Добавить блюдо';
@@ -1242,12 +1304,13 @@ function saveDish(){
   const spice=document.getElementById('dSpice').value;
   const tags=document.getElementById('dTags').value.trim();
   const img=document.getElementById('dImgUrl').value.trim();
+  const price07=parseInt(document.getElementById('dPrice07').value)||0;
   if(!name||!price){showNotif(t('fillRequired'));return;}
   if(editId){
     const idx=dishes.findIndex(d=>d.id===parseInt(editId));
-    if(idx>=0) dishes[idx]={id:parseInt(editId),name,nameEn,cat,price,desc,emoji,img,spice,tags};
+    if(idx>=0) dishes[idx]={id:parseInt(editId),name,nameEn,cat,price,price07,desc,emoji,img,spice,tags};
   } else {
-    dishes.push({id:nextDishId++,name,nameEn,cat,price,desc,emoji,img,spice,tags});
+    dishes.push({id:nextDishId++,name,nameEn,cat,price,price07,desc,emoji,img,spice,tags});
   }
   saveToStorage();
   // Save all dishes to Google Sheets
@@ -1422,8 +1485,11 @@ window.addEventListener('hashchange',checkHash);
 document.addEventListener('DOMContentLoaded',()=>{
   loadFromStorage();
   createPetals();
-  loadMenuFromSheets();
+  dishes = [];
+  barItems = [];
   renderMenu();
+  renderBar();
+  loadMenuFromSheets();
   checkHash();
 });
 
