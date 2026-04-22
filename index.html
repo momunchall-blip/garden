@@ -144,9 +144,10 @@ header{position:sticky;top:0;z-index:200;background:rgba(253,246,240,.96);backdr
 
 /* BADGES */
 .badges-row{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.4rem}
-.portion-row{display:flex;gap:.4rem;margin-top:.5rem}
-.portion-btn{background:#fff;border:1.5px solid var(--blush);border-radius:20px;padding:.25rem .7rem;font-size:.75rem;cursor:pointer;color:var(--bark);font-family:'Noto Sans KR',Arial,sans-serif;transition:all .2s}
+.portion-row{display:flex;gap:.4rem;margin-top:.5rem;flex-wrap:wrap}
+.portion-btn{background:#fff;border:1.5px solid var(--blush);border-radius:20px;padding:.3rem .8rem;font-size:.78rem;cursor:pointer;color:var(--bark);font-family:'Noto Sans KR',Arial,sans-serif;transition:all .2s;white-space:nowrap}
 .portion-btn.active{background:var(--deep-rose);color:#fff;border-color:var(--deep-rose)}
+.portion-price{font-size:.72rem;color:#8a6060;margin-left:.3rem}
 .badge{display:inline-flex;align-items:center;border-radius:20px;padding:.18rem .55rem;font-size:.68rem;font-weight:500;line-height:1.2}
 .badge-spice{background:#fff3e0;color:#a05000;border:1px solid #ffd9a0}
 .badge-hit{background:#ffe0e8;color:#b03060;border:1px solid #ffb5c8}
@@ -344,6 +345,9 @@ footer p{font-size:.8rem;opacity:.75;line-height:1.7}
   .form-card{padding:1.2rem}
   .category-tabs{padding:.6rem .8rem}
   .cat-tab{padding:.35rem .7rem;font-size:.75rem}
+  .portion-row{margin-top:.4rem}
+  .portion-btn{padding:.28rem .6rem;font-size:.72rem}
+  .menu-card-footer{flex-wrap:wrap;gap:.3rem}
 }
 @media(max-width:400px){
   .menu-grid{grid-template-columns:1fr 1fr}
@@ -849,7 +853,23 @@ function loadFromStorage(){
   }catch(e){}
 }
 
+function showMenuSkeleton(){
+  const grid = document.getElementById('menuGrid');
+  if(!grid) return;
+  grid.innerHTML = Array(6).fill('').map(()=>`
+    <div class="menu-card" style="opacity:.5">
+      <div class="menu-card-img" style="background:linear-gradient(135deg,#f9e8e0,#f2c4ce)"></div>
+      <div class="menu-card-body">
+        <div style="height:10px;background:#f0e0e8;border-radius:6px;margin-bottom:6px;width:40%"></div>
+        <div style="height:14px;background:#f0e0e8;border-radius:6px;margin-bottom:6px;width:80%"></div>
+        <div style="height:10px;background:#f0e0e8;border-radius:6px;width:60%"></div>
+      </div>
+    </div>`).join('');
+}
+
 function loadMenuFromSheets(){
+  showMenuSkeleton();
+  document.getElementById('barGrid') && (document.getElementById('barGrid').innerHTML = '');
   // Load main menu
   fetch(MENU_SCRIPT_URL + '?sheet=Sheet1&t=' + Date.now())
     .then(r => r.json())
@@ -861,6 +881,7 @@ function loadMenuFromSheets(){
           nameEn: d.name || '',
           cat: d.cat || 'Прочее',
           price: parseInt(d.price) || 0,
+          price07: parseInt(d.price07) || 0,
           desc: d.desc || '',
           spice: d.spice || '',
           tags: d.tags || '',
@@ -1028,11 +1049,11 @@ function renderReviews(){
 }
 
 // ===== BADGES =====
-function spiceBadge(spice){ return spice?`<span class="badge badge-spice">${spiceLabels[spice]}</span>`:''; }
+function spiceBadge(spice){ if(!spice||spice==='undefined') return ''; return spiceLabels[spice]?`<span class="badge badge-spice">${spiceLabels[spice]}</span>`:''; }
 function tagBadges(tags){
-  if(!tags) return '';
+  if(!tags || tags==='undefined' || tags.trim()==='') return '';
   const map={хит:'badge-hit',новинка:'badge-new',веган:'badge-vegan','без глютена':'badge-gf'};
-  return tags.split(',').map(t=>t.trim()).filter(Boolean)
+  return tags.split(',').map(t=>t.trim()).filter(t=>t&&t!=='undefined')
     .map(tag=>`<span class="badge ${map[tag.toLowerCase()]||'badge-default'}">${tag}</span>`).join('');
 }
 
@@ -1047,15 +1068,16 @@ function renderMenu(){
   let filtered = activeCategory==='Все' ? dishes : dishes.filter(d=>d.cat===activeCategory);
   if(q) filtered=filtered.filter(d=>d.name.toLowerCase().includes(q)||d.nameEn.toLowerCase().includes(q)||d.desc.toLowerCase().includes(q));
   const noRes=document.getElementById('noResults');
-  if(noRes) noRes.classList.toggle('hidden', filtered.length>0);
+  // Only show "not found" if dishes loaded AND search returned nothing
+  if(noRes) noRes.classList.toggle('hidden', filtered.length>0 || dishes.length===0);
   grid.innerHTML=filtered.map(d=>{
     const thumb=d.img?`<div class="menu-card-img"><img src="${d.img}" alt="${d.name}"></div>`:`<div class="menu-card-img">${d.emoji}</div>`;
     const name=currentLang==='en'?d.nameEn:d.name;
-    const badges=spiceBadge(d.spice)+tagBadges(d.tags);
+    const badges=spiceBadge(d.spice);
     const portionHtml = d.price07 ? `
       <div class="portion-row">
-        <button class="portion-btn active" id="pb1_${d.id}" onclick="selectPortion(${d.id},1)">Полная</button>
-        <button class="portion-btn" id="pb07_${d.id}" onclick="selectPortion(${d.id},0.7)">0.7</button>
+        <button class="portion-btn active" id="pb1_${d.id}" onclick="selectPortion(${d.id},1)">${d.price} сом</button>
+        <button class="portion-btn" id="pb07_${d.id}" onclick="selectPortion(${d.id},0.7)">0.7 — ${d.price07} сом</button>
       </div>` : '';
     return `<div class="menu-card">${thumb}<div class="menu-card-body"><div class="menu-card-cat">${d.cat}</div><h3>${name}</h3><p>${d.desc}</p>${badges?`<div class="badges-row">${badges}</div>`:''}<div class="menu-card-footer"><span class="price" id="price_${d.id}">${d.price} сом</span><button class="add-btn" onclick="addToCartPortion(${d.id})">+</button></div>${portionHtml}</div></div>`;
   }).join('');
@@ -1111,7 +1133,7 @@ function addToCartPortion(id){
   const cartId = id + '_' + portion;
   const existing = cart.find(i=>i.cartId===cartId);
   if(existing) existing.qty++;
-  else cart.push({cartId, id:id, name:d.name+portionLabel, nameEn:d.nameEn+portionLabel, price, emoji:d.emoji, img:d.img, qty:1, type:'main'});
+  else cart.push({cartId, id:id, name:d.name+portionLabel, nameEn:d.nameEn+portionLabel, price, emoji:d.emoji||'🍽️', img:d.img||'', qty:1, type:'main'});
   updateCartCount();
   showNotif(d.emoji+' '+d.name+portionLabel+' — '+t('added'));
 }
@@ -1122,7 +1144,7 @@ function addToCart(id, type){
   if(!dish) return;
   const ex=cart.find(i=>i.id===id&&i.type===type);
   if(ex) ex.qty++;
-  else cart.push({id:dish.id,name:dish.name,nameEn:dish.nameEn,price:dish.price,emoji:dish.emoji,img:dish.img,qty:1,type});
+  else cart.push({id:dish.id,name:dish.name,nameEn:dish.nameEn,price:dish.price,emoji:dish.emoji||'🍽️',img:dish.img||'',qty:1,type});
   updateCartCount();
   showNotif(dish.emoji+' '+dish.name+' — '+t('added'));
 }
@@ -1153,7 +1175,7 @@ function renderCart(){
   const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
   container.innerHTML=cart.map(item=>{
     const thumb=item.img?`<img class="cart-item-img" src="${item.img}" alt="">`:`<span class="cart-item-emoji">${item.emoji}</span>`;
-    const name=currentLang==='en'?item.nameEn:item.name;
+    const name=(currentLang==='en'&&item.nameEn&&item.nameEn!='undefined')?item.nameEn:item.name||'Блюдо';
     const cid = item.cartId||''; return `<div class="cart-item">${thumb}<div class="cart-item-info"><h4>${name}</h4><p>${item.price} сом × ${item.qty}</p></div><div class="cart-qty"><button class="qty-btn" onclick="changeQty(${item.id},'${item.type}',-1,'${cid}')">−</button><span class="qty-num">${item.qty}</span><button class="qty-btn" onclick="changeQty(${item.id},'${item.type}',1,'${cid}')">+</button></div><span class="cart-item-price">${item.price*item.qty} сом</span><button class="remove-btn" onclick="removeItem(${item.id},'${item.type}','${cid}')">🗑</button></div>`;
   }).join('')+
   `<div class="cart-total"><h3>${t('total')}</h3><span class="total-price">${total} сом</span></div>
@@ -1166,7 +1188,7 @@ function showWaiterModal(){
   document.querySelector('#waiterModal h2').textContent=t('yourOrder');
   document.querySelector('#waiterModal p').textContent=t('showToWaiter');
   document.querySelector('#waiterModal .btn-primary').textContent=t('close');
-  listEl.innerHTML=cart.map(i=>{const name=currentLang==='en'?i.nameEn:i.name;return`<div class="modal-cart-item"><span>${i.emoji} ${name} × ${i.qty}</span><span>${i.price*i.qty} сом</span></div>`;}).join('');
+  listEl.innerHTML=cart.map(i=>{const name=currentLang==='en'?i.nameEn:i.name;const emo=(i.emoji&&i.emoji!='undefined')?i.emoji+' ':'';return`<div class="modal-cart-item"><span>${emo}${name} × ${i.qty}</span><span>${i.price*i.qty} сом</span></div>`;}).join('');
   totalEl.textContent=t('total')+' '+total+' сом';
   document.getElementById('waiterModal').classList.remove('hidden');
 }
