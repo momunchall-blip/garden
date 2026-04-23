@@ -38,7 +38,7 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth;overscroll-behavior:none;height:100%}
-body{font-family:'Noto Sans KR',Arial,sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;overflow-x:hidden;padding-bottom:var(--mobile-nav-h);overscroll-behavior-y:none}
+body{font-family:'Noto Sans KR',Arial,sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;overflow-x:hidden;padding-bottom:var(--mobile-nav-h);padding-top:var(--header-h);overscroll-behavior-y:none}
 
 /* SAKURA */
 .sakura-bg{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
@@ -46,7 +46,7 @@ body{font-family:'Noto Sans KR',Arial,sans-serif;background:var(--cream);color:v
 @keyframes fall{0%{transform:translateY(-20px) rotate(0deg);opacity:.8}100%{transform:translateY(100vh) rotate(720deg) translateX(40px);opacity:0}}
 
 /* HEADER */
-header{position:sticky;top:0;z-index:200;background:rgba(253,246,240,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--sakura);height:var(--header-h);display:flex;align-items:center;padding:0 1rem;gap:.8rem;box-shadow:0 2px 16px var(--shadow)}
+header{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(253,246,240,.97);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--sakura);height:var(--header-h);display:flex;align-items:center;padding:0 1rem;gap:.8rem;box-shadow:0 2px 16px var(--shadow)}
 .logo{font-family:'Cormorant Garamond','Georgia',serif;font-size:1.2rem;font-weight:600;color:var(--bark);cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;flex-shrink:0}
 .logo-img{height:38px;width:auto;object-fit:contain}
 .logo-text{font-size:1.1rem}
@@ -121,7 +121,7 @@ header{position:sticky;top:0;z-index:200;background:rgba(253,246,240,.96);backdr
 .no-results.hidden{display:none}
 
 /* CATEGORY TABS */
-.category-tabs{display:flex;gap:.4rem;flex-wrap:nowrap;overflow-x:auto;padding:.8rem 1.2rem;position:sticky;top:var(--header-h);z-index:10;background:var(--cream);border-bottom:1px solid var(--blush);scrollbar-width:none}
+.category-tabs{display:flex;gap:.4rem;flex-wrap:nowrap;overflow-x:auto;padding:.8rem 1.2rem;position:sticky;top:var(--header-h);z-index:10;background:var(--cream);border-bottom:1px solid var(--blush);scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .category-tabs::-webkit-scrollbar{display:none}
 .cat-tab{background:#fff;border:1.5px solid var(--blush);border-radius:24px;padding:.4rem 1rem;font-size:.8rem;cursor:pointer;color:var(--bark);font-family:'Noto Sans KR',Arial,sans-serif;transition:all .2s;white-space:nowrap;flex-shrink:0}
 .cat-tab:hover,.cat-tab.active{background:var(--deep-rose);color:#fff;border-color:var(--deep-rose)}
@@ -310,7 +310,8 @@ header{position:sticky;top:0;z-index:200;background:rgba(253,246,240,.96);backdr
 .floating-cart-count{position:absolute;top:-4px;right:-4px;background:#fff;color:var(--deep-rose);border-radius:50%;width:20px;height:20px;font-size:.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--deep-rose)}
 @keyframes popIn{from{transform:scale(0)}to{transform:scale(1)}}
 @media(min-width:701px){.floating-cart{bottom:1.5rem;right:1.5rem}}
-.notif{position:fixed;bottom:calc(var(--mobile-nav-h) + 1rem);right:1rem;z-index:1000;background:var(--bark);color:#fff;padding:.7rem 1.2rem;border-radius:30px;font-size:.82rem;box-shadow:0 4px 20px rgba(0,0,0,.25);transform:translateY(20px);opacity:0;transition:all .3s;pointer-events:none;max-width:calc(100vw - 2rem)}
+@media(max-width:700px){.floating-cart{bottom:calc(var(--mobile-nav-h) + .8rem);right:1rem}}
+.notif{position:fixed;bottom:calc(var(--mobile-nav-h) + 5rem);right:1rem;z-index:1000;background:var(--bark);color:#fff;padding:.7rem 1.2rem;border-radius:30px;font-size:.82rem;box-shadow:0 4px 20px rgba(0,0,0,.25);transform:translateY(20px);opacity:0;transition:all .3s;pointer-events:none;max-width:calc(100vw - 2rem)}
 .notif.show{transform:none;opacity:1}
 
 /* FOOTER */
@@ -379,6 +380,7 @@ footer p{font-size:.8rem;opacity:.75;line-height:1.7}
     <button onclick="showPage('menu')" class="nav-btn" id="nav-menu">Меню</button>
     <button onclick="showPage('banquet')" class="nav-btn" id="nav-banquet">Бронь</button>
     <button onclick="showPage('reviews')" class="nav-btn" id="nav-reviews">Отзывы</button>
+    <button onclick="showPage('about')" class="nav-btn" id="nav-about">О нас</button>
   </nav>
   <div class="header-right">
     <button class="lang-btn" onclick="cycleLang()">🌐 <span id="langLabel">RU</span></button>
@@ -392,6 +394,7 @@ footer p{font-size:.8rem;opacity:.75;line-height:1.7}
   <button onclick="showPage('menu')" class="mobile-nav-btn" id="mnav-menu">🍜<span>Меню</span></button>
   <button onclick="showPage('banquet')" class="mobile-nav-btn" id="mnav-banquet">🎉<span>Бронь</span></button>
   <button onclick="showPage('reviews')" class="mobile-nav-btn" id="mnav-reviews">⭐<span>Отзывы</span></button>
+  <button onclick="showPage('about')" class="mobile-nav-btn" id="mnav-about">📍<span>О нас</span></button>
 </nav>
 
 <div class="notif" id="notif"></div>
@@ -752,7 +755,6 @@ footer p{font-size:.8rem;opacity:.75;line-height:1.7}
     <a href="https://wa.me/996558171942" target="_blank">💬 WhatsApp</a>
   </div>
   <p style="font-size:0.75rem;opacity:0.5;margin-top:0.6rem">© 2026 Han's Garden & Ria Cafe</p>
-  <p style="margin-top:.6rem"><a href="#" onclick="showPage('about');return false;" style="color:var(--sakura);font-size:.82rem;text-decoration:none">📍 О нас</a></p>
   <p style="margin-top:0.8rem"><a href="#" onclick="showPage('admin');return false;" style="color:rgba(255,255,255,0.12);font-size:0.6rem;text-decoration:none">⚙</a></p>
 </footer>
 
